@@ -20,12 +20,11 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  submit() {
+  async submit() {
     if (this.form.valid) {
-      this.userService.login(this.form.value.username, this.form.value.password).subscribe((res) => {
-
-        localStorage.setItem('token', res.token);
-      });
+      await this.userService.login(this.form.value.username, this.form.value.password).then((res) => {
+        localStorage.setItem("token", res.token);
+      })
     }
   }
 
