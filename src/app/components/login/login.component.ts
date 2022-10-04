@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
@@ -15,15 +16,19 @@ export class LoginComponent implements OnInit {
   })
 
   constructor(private userService: UserService) {
-   }
+  }
 
   ngOnInit(): void {
   }
 
   async submit() {
     if (this.form.valid) {
-      await this.userService.login(this.form.value.username, this.form.value.password).then((res) => {
-        localStorage.setItem("token", res.token);
+      await this.userService.login(this.form.value.username, this.form.value.password).subscribe((res) => {
+        console.log(res)
+        if (res != undefined) {
+          localStorage.setItem('token', JSON.stringify(res.token));
+          console.log(res.token)
+        }
       })
     }
   }
