@@ -1,10 +1,11 @@
+import { Observable, map } from 'rxjs';
+
 import { API } from './../models/api';
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import jwt_decode from 'jwt-decode';
 import { User } from '../models/user';
+import jwt_decode from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +19,15 @@ export class UserService {
   }
 
   login(username: string, password: string): Observable<User> {
-    const user = this.httpClient.post<User>(API.user.login, { username: username, password: password })
-    .pipe(
-      map(user => {
-        localStorage.setItem('token', JSON.stringify(user))
-          return user;
-        }
-      )
-    );
+    // const user = this.httpClient.post<User>(API.user.login, { username: username, password: password })
+    //   .pipe(
+    //     map(user => {
+    //       localStorage.setItem('token', JSON.stringify(user));
+    //       return user;
+    //     })
+    //   );
+    // return user;
+    return this.httpClient.post<User>(API.user.login, { username: username, password: password });
   }
 
   logout(): void {
