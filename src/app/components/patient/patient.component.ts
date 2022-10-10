@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 
 import { AddPatientComponent } from '../add-patient/add-patient.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,7 +13,7 @@ import { PatientService } from 'src/app/services/patient.service';
   templateUrl: './patient.component.html',
   styleUrls: ['./patient.component.scss']
 })
-export class PatientComponent implements OnInit {
+export class PatientComponent implements OnInit, AfterViewInit {
 
   displayedColumns: string[] = [];
   dataSource!: MatTableDataSource<Patient>;
@@ -21,34 +21,32 @@ export class PatientComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private dialog: MatDialog, private patientService: PatientService) { }
+  constructor(private dialog: MatDialog, private patientService: PatientService) {
+    this.displayedColumns = ['id', 'name', 'dob', 'nationality', 'actions'];
+   }
 
   ngOnInit(): void {
-    this.configureTable();
     this.getData();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
-    // if (this.dataSource.paginator) {
-    //   this.dataSource.paginator.firstPage();
-    // }
-  }
-
-  configureTable() {
-    this.displayedColumns = ['id', 'name', 'dob', 'nationality', 'actions'];
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   getData() {
     this.patientService.getAllPatients().subscribe((res) => {
       this.dataSource = new MatTableDataSource(res);
     });
-
-    // this.patientService.getPatientById('1').subscribe((res) => {
-    //   console.log(res)
-    // })
   }
 
   addEditPatient(id?: number) {
