@@ -1,13 +1,11 @@
 <h1>Patient Module</h1>
-
-<mat-form-field appearance="standard">
-  <mat-label>Filter</mat-label>
-  <input matInput (keyup)="applyFilter($event)" placeholder="Name" #input>
-</mat-form-field>
-
-<button mat-fab color="primary" aria-label="Add patient" (click)="addEditPatient()">
-  <mat-icon>add</mat-icon>
-</button>
+    <mat-form-field appearance="standard">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Name" #input>
+    </mat-form-field>
+  <button mat-fab color="primary" aria-label="Add patient" (click)="addEditPatient()">
+    <mat-icon>add</mat-icon>
+  </button>
 
 <div class="mat-elevation-z8">
 <table mat-table [dataSource]="dataSource" matSort>
@@ -42,5 +40,5 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
-<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of patients"></mat-paginator>
 </div>

@@ -13,25 +13,18 @@ import { PatientService } from 'src/app/services/patient.service';
   templateUrl: './patient.component.html',
   styleUrls: ['./patient.component.scss']
 })
-export class PatientComponent implements OnInit, AfterViewInit {
+export class PatientComponent implements OnInit {
 
-  displayedColumns: string[] = [];
+  displayedColumns: string[] = ['id', 'name', 'dob', 'nationality', 'actions'];
   dataSource!: MatTableDataSource<Patient>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private dialog: MatDialog, private patientService: PatientService) {
-    this.displayedColumns = ['id', 'name', 'dob', 'nationality', 'actions'];
-   }
+  constructor(private dialog: MatDialog, private patientService: PatientService) {}
 
   ngOnInit(): void {
     this.getData();
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: Event) {
@@ -46,6 +39,8 @@ export class PatientComponent implements OnInit, AfterViewInit {
   getData() {
     this.patientService.getAllPatients().subscribe((res) => {
       this.dataSource = new MatTableDataSource(res);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
   }
 
