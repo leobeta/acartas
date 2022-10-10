@@ -1,8 +1,11 @@
 import { environment } from './../../environments/environment';
 
+const APIURI = environment.apiUrl;
 
 export const API = {
   user: {
-    login: environment.apiUrl + '/user/login',
-  }
+    login: APIURI + '/user/login',
+  },
+
+  patient: APIURI + '/patient'
 }

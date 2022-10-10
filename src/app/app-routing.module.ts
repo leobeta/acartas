@@ -1,14 +1,20 @@
+import { RouterModule, Routes } from '@angular/router';
+
+import { AgendaComponent } from './components/agenda/agenda.component';
 import { AuthGuard } from './core/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { PatientComponent } from './components/patient/patient.component';
 
 const routes: Routes = [
-  {path: 'login', component: LoginComponent},
-  {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
-  {path: '**', component: NotFoundComponent}
+  { path: 'login', component: LoginComponent },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard] },
+  { path: 'patient', component: PatientComponent, canActivate: [AuthGuard] },
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({

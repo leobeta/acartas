@@ -1,22 +1,27 @@
-import { UserService } from 'src/app/services/user.service';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
+
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { UserService } from 'src/app/services/user.service';
 
 @Injectable()
 
 export class TokenInterceptor implements HttpInterceptor {
-  constructor(private userService: UserService) {}
+  private token: string;
+  constructor(private userService: UserService) {
+    this.token = localStorage.getItem('token') || '';
+  }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-      const user = this.userService.getLoggedUser();
-      if(user) {
-        req = req.clone({
-          setHeaders: {
-            Authorization: `Bearer ${req}`
-          }
-        });
-      }
-      return next.handle(req);
+    const user = this.userService.getLoggedUser();
+    if (user) {
+      const header = `Bearer ${this.token}`
+      req = req.clone({
+        setHeaders: {
+          Authorization: header
+        }
+      });
+    }
+    return next.handle(req);
   }
 }

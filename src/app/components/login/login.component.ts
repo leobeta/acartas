@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
+import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
 
@@ -15,7 +16,7 @@ export class LoginComponent implements OnInit {
     password: new FormControl('', [Validators.required])
   })
 
-  constructor(private userService: UserService) {
+  constructor(private userService: UserService, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -23,12 +24,10 @@ export class LoginComponent implements OnInit {
 
   async submit() {
     if (this.form.valid) {
-      await this.userService.login(this.form.value.username, this.form.value.password).subscribe((res) => {
-        console.log(res)
-        if (res != undefined) {
-          localStorage.setItem('token', JSON.stringify(res.token));
-          console.log(res.token)
-        }
+      this.userService.login(this.form.value.username, this.form.value.password).subscribe((res) => {
+        localStorage.setItem('token', res.token!);
+        localStorage.setItem('userId', JSON.stringify(res.id));
+        this.router.navigate(['/home']);
       })
     }
   }
