@@ -21,12 +21,16 @@ export class PatientService {
     return this.httpClient.get<Patient[]>(API.patient);
   }
 
-  getPatientById(id: string): Observable<Patient> {
-    return this.httpClient.get<Patient>(API.patient + `/${id}`);
+  getPatientById(id: string): Observable<Patient[]> {
+    return this.httpClient.get<Patient[]>(API.patient + `/${id}`);
   }
 
   postPatient(patient: Patient): Observable<any> {
     return this.httpClient.post<Patient>(API.patient, patient);
+  }
+
+  patchPatient(id: number, patient: Patient): Observable<any> {
+    return this.httpClient.patch(API.patient + `/${id}`, patient);
   }
 
   deletePatient(id: number): Observable<void> {

@@ -32,8 +32,8 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let row">
-      <mat-icon matToolTip="Edit" class="btnEdit">edit</mat-icon>
-      <mat-icon matToolTip="Delete" class="btnDelete" (click)="deletePatient(row.id)">delete</mat-icon>
+      <mat-icon matToolTip="Edit" class="btn btnEdit" (click)="addEditPatient(row.id)">edit</mat-icon>
+      <mat-icon matToolTip="Delete" class="btn btnDelete" (click)="deletePatient(row.id)">delete</mat-icon>
     </td>
   </ng-container>
 

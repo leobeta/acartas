@@ -13,7 +13,7 @@ import { PatientService } from 'src/app/services/patient.service';
 export class AddPatientComponent implements OnInit {
 
   form: FormGroup;
-  id: number | undefined;
+  id!: number;
   operation: string = 'Add '
 
   constructor(
@@ -32,6 +32,7 @@ export class AddPatientComponent implements OnInit {
       telephone: [''],
       email: ['', [Validators.email]],
     });
+    console.log(data.id)
     this.id = data.id
   }
 
@@ -39,26 +40,29 @@ export class AddPatientComponent implements OnInit {
     this.isEdit(this.id);
   }
 
-  isEdit(id: number | undefined) {
+  isEdit(id: number | undefined): Boolean {
     if (id !== undefined) {
       this.operation = 'Edit ';
       this.getPatient(id);
+      return true;
     }
+    return false;
   }
 
   getPatient(id: number) {
+    console.log(id);
     this.patientService.getPatientById(id.toString()).subscribe(data => {
-      console.log(data.id);
+      console.log(data)
       this.form.setValue({
-        firstname: data.firstname,
-        lastname: data.lastname,
-        dob: data.dob,
-        nationality: data.nationality,
-        residenceCountry: data.residenceCountry,
-        locality: data.locality,
-        occupation: data.occupation,
-        telephone: data.telephone,
-        email: data.email,
+        firstname: data[0].firstname,
+        lastname: data[0].lastname,
+        dob: data[0].dob,
+        nationality: data[0].nationality,
+        residenceCountry: data[0].residenceCountry,
+        locality: data[0].locality,
+        occupation: data[0].occupation,
+        telephone: data[0].telephone,
+        email: data[0].email,
       })
     })
   }
@@ -78,9 +82,16 @@ export class AddPatientComponent implements OnInit {
       email: this.form.value.email || null,
       active: true
     }
-    this.patientService.postPatient(patient).subscribe((res) => {
-      console.log(res);
-    })
+    if(!this.isEdit(this.id)) {
+      this.patientService.postPatient(patient).subscribe((res) => {
+        console.log(res);
+      })
+    } else {
+      patient.id = this.id;
+      this.patientService.patchPatient(this.id!, patient).subscribe((res) => {
+        console.log(res);
+      })
+    }
   }
 
   closeDialog() {

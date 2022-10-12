@@ -2,10 +2,15 @@ table {
   width: 100%;
 }
 
-.btnEdit {
-  color:cornflowerblue
-}
+.btn {
 
-.btnDelete {
-  color: darkred;
+  cursor: pointer;
+
+  .btnEdit {
+  color:cornflowerblue
+  }
+
+  .btnDelete {
+    color: darkred;
+  }
 }
