@@ -16,6 +16,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NgModule } from '@angular/core';
 
 @NgModule({
@@ -39,6 +40,7 @@ import { NgModule } from '@angular/core';
     MatDatepickerModule,
     MatNativeDateModule,
     MatProgressBarModule,
+    MatSnackBarModule,
   ],
   exports: [
     MatCardModule,
@@ -58,6 +60,7 @@ import { NgModule } from '@angular/core';
     MatDatepickerModule,
     MatNativeDateModule,
     MatProgressBarModule,
+    MatSnackBarModule,
   ]
 })
 export class ShareModule { }
