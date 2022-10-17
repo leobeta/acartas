@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Patient } from 'src/app/models/patient';
 import { PatientService } from 'src/app/services/patient.service';
 
@@ -20,6 +21,7 @@ export class AddPatientComponent implements OnInit {
     private patientService: PatientService,
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<AddPatientComponent>,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
       firstname: ['', [Validators.required, Validators.maxLength(20)]],
@@ -81,14 +83,21 @@ export class AddPatientComponent implements OnInit {
     }
     if (!this.isEdit(this.id)) {
       this.patientService.postPatient(patient).subscribe((res) => {
-        console.log(res);
+        this.openSnackBar(res);
       })
     } else {
       patient.id = this.id;
       this.patientService.patchPatient(this.id!, patient).subscribe((res) => {
-        console.log(res);
+        this.openSnackBar(res);
       })
     }
+  }
+
+  openSnackBar(data: any) {
+    this.snackBar.open(data, 'Splash', {
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    });
   }
 
   closeDialog() {
