@@ -21,7 +21,7 @@ export class PatientComponent implements OnInit {
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private dialog: MatDialog, private patientService: PatientService) {}
+  constructor(private dialog: MatDialog, private patientService: PatientService) { }
 
   ngOnInit(): void {
     this.getData();

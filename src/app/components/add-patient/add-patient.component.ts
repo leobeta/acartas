@@ -13,7 +13,7 @@ import { PatientService } from 'src/app/services/patient.service';
 export class AddPatientComponent implements OnInit {
 
   form: FormGroup;
-  id!: number;
+  id: number;
   operation: string = 'Add '
 
   constructor(
@@ -32,7 +32,6 @@ export class AddPatientComponent implements OnInit {
       telephone: [''],
       email: ['', [Validators.email]],
     });
-    console.log(data.id)
     this.id = data.id
   }
 
@@ -40,7 +39,7 @@ export class AddPatientComponent implements OnInit {
     this.isEdit(this.id);
   }
 
-  isEdit(id: number | undefined): Boolean {
+  isEdit(id: number | undefined): boolean {
     if (id !== undefined) {
       this.operation = 'Edit ';
       this.getPatient(id);
@@ -50,13 +49,11 @@ export class AddPatientComponent implements OnInit {
   }
 
   getPatient(id: number) {
-    console.log(id);
     this.patientService.getPatientById(id.toString()).subscribe(data => {
-      console.log(data)
       this.form.setValue({
         firstname: data[0].firstname,
         lastname: data[0].lastname,
-        dob: data[0].dob,
+        dob: data[0].dob ? new Date(data[0].dob) : undefined,
         nationality: data[0].nationality,
         residenceCountry: data[0].residenceCountry,
         locality: data[0].locality,
@@ -82,7 +79,7 @@ export class AddPatientComponent implements OnInit {
       email: this.form.value.email || null,
       active: true
     }
-    if(!this.isEdit(this.id)) {
+    if (!this.isEdit(this.id)) {
       this.patientService.postPatient(patient).subscribe((res) => {
         console.log(res);
       })

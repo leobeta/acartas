@@ -2,6 +2,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { AgendaComponent } from './components/agenda/agenda.component';
 import { AuthGuard } from './core/auth.guard';
+import { CasesComponent } from './components/cases/cases.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { NgModule } from '@angular/core';
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'agenda', component: AgendaComponent, canActivate: [AuthGuard] },
   { path: 'patient', component: PatientComponent, canActivate: [AuthGuard] },
+  { path: 'cases', component: CasesComponent, canActivate: [AuthGuard] },
   { path: '**', component: NotFoundComponent }
 ];
 

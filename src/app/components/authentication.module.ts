@@ -12,9 +12,12 @@ import { LogoutComponent } from './logout/logout.component';
 import { PatientComponent } from './patient/patient.component';
 import { ShareModule } from './../share/share.module';
 import { TokenInterceptor } from '../interceptors/token.interceptor';
+import { AddEditScheduleComponent } from './add-edit-schedule/add-edit-schedule.component';
+import { CasesComponent } from './cases/cases.component';
+import { AddEditCasesComponent } from './add-edit-cases/add-edit-cases.component';
 
 @NgModule({
-  declarations: [LoginComponent, LogoutComponent, AgendaComponent, PatientComponent, AddPatientComponent],
+  declarations: [LoginComponent, LogoutComponent, AgendaComponent, PatientComponent, AddPatientComponent, AddEditScheduleComponent, CasesComponent, AddEditCasesComponent],
   imports: [
     CommonModule,
     FormsModule,

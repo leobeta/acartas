@@ -6,51 +6,51 @@
   Cartas
 </mat-toolbar>
 <div>
-<mat-sidenav-container>
-  <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
-    <img class="avatar mat-elevation-z8" src="https://source.unsplash.com/c_GmwfHBDzk/200x200" />
+  <mat-sidenav-container>
+    <mat-sidenav #sidenav="matSidenav" class="mat-elevation-z8">
+      <img class="avatar mat-elevation-z8" src="https://source.unsplash.com/c_GmwfHBDzk/200x200" />
 
-    <h4 class="name">John Smith</h4>
-    <p class="designation">Software Engineer</p>
+      <h4 class="name">John Smith</h4>
+      <p class="designation">Software Engineer</p>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-    <button mat-button class="menu-button" routerLink="/home">
-      <mat-icon>home</mat-icon>
-      <span>Inicio</span>
-    </button>
-    <button mat-button class="menu-button" routerLink="/patient">
-      <mat-icon>person</mat-icon>
-      <span>Pacientes</span>
-    </button>
-    <button mat-button class="menu-button" routerLink="/agenda">
-      <mat-icon>calendar_month</mat-icon>
-      <span>Agenda</span>
-    </button>
-    <button mat-button class="menu-button" routerLink="/profile">
-      <mat-icon>person</mat-icon>
-      <span>Casos</span>
-    </button>
-    <button mat-button class="menu-button" routerLink="/about">
-      <mat-icon>info</mat-icon>
-      <span>About</span>
-    </button>
+      <button mat-button class="menu-button" routerLink="/home">
+        <mat-icon>home</mat-icon>
+        <span>Inicio</span>
+      </button>
+      <button mat-button class="menu-button" routerLink="/patient">
+        <mat-icon>person</mat-icon>
+        <span>Pacientes</span>
+      </button>
+      <button mat-button class="menu-button" routerLink="/agenda">
+        <mat-icon>calendar_month</mat-icon>
+        <span>Agenda</span>
+      </button>
+      <button mat-button class="menu-button" routerLink="/cases">
+        <mat-icon>person</mat-icon>
+        <span>Casos</span>
+      </button>
+      <button mat-button class="menu-button" routerLink="/about">
+        <mat-icon>info</mat-icon>
+        <span>About</span>
+      </button>
 
-    <mat-divider></mat-divider>
+      <mat-divider></mat-divider>
 
-    <button mat-button class="menu-button" routerLink="/help">
-      <mat-icon>help</mat-icon>
-      <span>Help</span>
-    </button>
-    <button mat-button class="menu-button" (click)="logout()" *ngIf="isLoggedIn()">
-      <mat-icon>logout</mat-icon>
-      <span>Logout</span>
-    </button>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <div class="content mat-elevation-z8">
-      <router-outlet></router-outlet>
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+      <button mat-button class="menu-button" routerLink="/help">
+        <mat-icon>help</mat-icon>
+        <span>Help</span>
+      </button>
+      <button mat-button class="menu-button" (click)="logout()" *ngIf="isLoggedIn()">
+        <mat-icon>logout</mat-icon>
+        <span>Logout</span>
+      </button>
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <div class="content mat-elevation-z8">
+        <router-outlet></router-outlet>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>

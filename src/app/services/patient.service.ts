@@ -11,29 +11,26 @@ import { Patient } from "../models/patient";
 
 export class PatientService {
 
-  private token: string;
-
-  constructor(private httpClient: HttpClient) {
-    this.token = localStorage.getItem('token') || '';
+  constructor(private http: HttpClient) {
   }
 
   getAllPatients(): Observable<Patient[]> {
-    return this.httpClient.get<Patient[]>(API.patient);
+    return this.http.get<Patient[]>(API.patient);
   }
 
   getPatientById(id: string): Observable<Patient[]> {
-    return this.httpClient.get<Patient[]>(API.patient + `/${id}`);
+    return this.http.get<Patient[]>(API.patient + `/${id}`);
   }
 
   postPatient(patient: Patient): Observable<any> {
-    return this.httpClient.post<Patient>(API.patient, patient);
+    return this.http.post<Patient>(API.patient, patient);
   }
 
   patchPatient(id: number, patient: Patient): Observable<any> {
-    return this.httpClient.patch(API.patient + `/${id}`, patient);
+    return this.http.patch(API.patient + `/${id}`, patient);
   }
 
   deletePatient(id: number): Observable<void> {
-    return this.httpClient.delete<void>(API.patient + `/${id}`);
+    return this.http.delete<void>(API.patient + `/${id}`);
   }
 }

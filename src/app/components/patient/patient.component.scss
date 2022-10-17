@@ -3,14 +3,24 @@ table {
 }
 
 .btn {
-
   cursor: pointer;
+}
 
-  .btnEdit {
-  color:cornflowerblue
-  }
+.btnEdit {
+color:cornflowerblue
+}
 
-  .btnDelete {
-    color: darkred;
-  }
+.btnDelete {
+  color: darkred;
+}
+
+mat-form-field {
+  font-size: 14px;
+  width: 80%;
+}
+
+.headerTableContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }

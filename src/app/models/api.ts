@@ -6,6 +6,6 @@ export const API = {
   user: {
     login: APIURI + '/user/login',
   },
-
-  patient: APIURI + '/patient'
+  patient: APIURI + '/patient',
+  schedule: APIURI + '/schedule',
 }
