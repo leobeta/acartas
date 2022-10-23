@@ -21,6 +21,8 @@
     "@angular/platform-browser-dynamic": "^14.2.0",
     "@angular/router": "^14.2.0",
     "@ngneat/until-destroy": "^9.2.2",
+    "mat-timepicker": "^5.1.7",
+    "moment": "^2.29.4",
     "rxjs": "~7.5.0",
     "tailwindcss": "^3.1.8",
     "tslib": "^2.3.0",

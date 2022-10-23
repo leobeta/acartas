@@ -7,20 +7,20 @@ import { Patient } from 'src/app/models/patient';
 import { PatientService } from 'src/app/services/patient.service';
 
 @Component({
-  selector: 'app-add-patient',
-  templateUrl: './add-patient.component.html',
-  styleUrls: ['./add-patient.component.scss']
+  selector: 'app-add-edit-patient',
+  templateUrl: './add-edit-patient.component.html',
+  styleUrls: ['./add-edit-patient.component.scss']
 })
-export class AddPatientComponent implements OnInit {
+export class AddEditPatientComponent implements OnInit {
 
   form: FormGroup;
   id: number;
-  operation: string = 'Add '
+  operation: string = 'Agregar '
 
   constructor(
     private patientService: PatientService,
     private fb: FormBuilder,
-    public dialogRef: MatDialogRef<AddPatientComponent>,
+    public dialogRef: MatDialogRef<AddEditPatientComponent>,
     private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
@@ -43,7 +43,7 @@ export class AddPatientComponent implements OnInit {
 
   isEdit(id: number | undefined): boolean {
     if (id !== undefined) {
-      this.operation = 'Edit ';
+      this.operation = 'Editar ';
       this.getPatient(id);
       return true;
     }
@@ -66,7 +66,7 @@ export class AddPatientComponent implements OnInit {
     })
   }
 
-  addPatient() {
+  addEditPatient() {
     if (this.form.invalid) {
       return;
     }

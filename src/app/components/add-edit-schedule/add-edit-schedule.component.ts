@@ -1,9 +1,13 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Patient } from 'src/app/models/patient';
 import { Schedule } from 'src/app/models/schedule';
+import { PatientService } from 'src/app/services/patient.service';
+import * as moment from 'moment'
 
 import { ScheduleService } from '../../services/schedule.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-edit-schedule',
@@ -14,21 +18,38 @@ export class AddEditScheduleComponent implements OnInit {
   form: FormGroup;
   id: number;
   operation: string = 'Create ';
+  patientList: Patient[];
+  minValue: Date;
+  maxValue: Date;
 
   constructor(
     private scheduleService: ScheduleService,
+    private patientService: PatientService,
     private fb: FormBuilder,
+    private snackBar: MatSnackBar,
     public dialogRef: MatDialogRef<AddEditScheduleComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
       appointmentDate: [null, [Validators.required]],
+      time: [null, [Validators.required]],
       notes: [''],
       patient: [null, [Validators.required]],
     })
     this.id = data.id;
+    this.patientList = [];
+    const minValue = new Date();
+    minValue.setHours(8);
+    minValue.setMinutes(0);
+    this.minValue = minValue;
+
+    const maxValue = new Date();
+    maxValue.setHours(17);
+    maxValue.setMinutes(0);
+    this.maxValue = maxValue;
   }
 
   ngOnInit(): void {
+    this.getPatientList();
     this.isEdit(this.id);
   }
 
@@ -44,34 +65,56 @@ export class AddEditScheduleComponent implements OnInit {
   getSchedule(id: number) {
     this.scheduleService.getScheduleById(id.toString()).subscribe(data => {
       this.form.setValue({
-        appointmentDate: data[0].appointmentDate ? new Date(data[0].appointmentDate) : undefined,
+        date: data[0].date ? new Date(data[0].date) : undefined,
         notes: data[0].notes,
-        patient: data[0].patient,
+        patient: data[0].patientId,
       });
     })
   }
 
-  addEditPatient() {
+  getPatientList() {
+    this.patientService.getAllPatients().subscribe((res) => {
+      this.patientList = res;
+    })
+  }
+
+  addEditSchedule() {
     if (this.form.invalid) {
       return;
     }
 
     const schedule: Schedule = {
-      appointmentDate: this.form.value.appointmentDate.toISOString().slice(0, 10),
+      date: this.getFullDate(this.form.value.appointmentDate, this.form.value.time),
       notes: this.form.value.notes || null,
-      patient: this.form.value.patient,
+      patientId: this.form.value.patient,
+      userId: Number(localStorage.getItem('userId')),
+      active: true,
     }
 
     if (!this.isEdit(this.id)) {
       this.scheduleService.postSchedule(schedule).subscribe((res) => {
-        console.log(res);
+        this.openSnackBar(res);
       })
     } else {
       schedule.id = this.id;
       this.scheduleService.patchSchedule(this.id!, schedule).subscribe((res) => {
-        console.log(res);
+        this.openSnackBar(res);
       })
     }
+  }
+
+  openSnackBar(data: any) {
+    this.snackBar.open(data, 'Splash', {
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+    });
+  }
+
+  getFullDate(appointmentDate: Date, time: Date): string {
+    const dateString = `${appointmentDate.toLocaleDateString('en-US')} ${time.toLocaleTimeString('en-GB')}`;
+    const [month, day, year, hour, minutes, seconds] = dateString.split(/\D/).map(Number);
+
+    return moment(new Date(year, month - 1, day, hour, minutes, seconds)).format("YYYY-MM-DD HH:mm:ss");
   }
 
   closeDialog() {

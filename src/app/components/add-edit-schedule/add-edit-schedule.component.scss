@@ -1,0 +1,84 @@
+$border-color: rgba(0, 0, 0, .09);
+
+.full-width {
+  width: 96%;
+  padding: 2%;
+}
+
+.med-width {
+  width: 46%;
+  padding: 2%;
+}
+
+.ngx-material-timepicker {
+    padding-top: 50px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.ngx-material-timepicker-heading {
+    &__title {
+        font-weight: 400;
+        font-size: 25px;
+        margin: 0;
+        padding-bottom: 15px;
+        border-bottom: 1px solid $border-color;
+    }
+}
+
+.ngx-material-timepicker-examples {
+    &__title {
+        font-weight: 400;
+        font-size: 22px;
+    }
+    &__container {
+        margin-bottom: 30px;
+    }
+}
+
+.ngx-material-timepicker-example {
+    border-radius: 2px;
+    box-shadow: rgba(0, 0, 0, 0.12) 0 1px 6px, rgba(0, 0, 0, 0.12) 0 1px 4px;
+    overflow: hidden;
+    &__body {
+        padding: 15px;
+    }
+    &__description {
+        margin: 0 0 15px;
+    }
+    &__form-group {
+        position: relative;
+        max-width: 300px;
+        width: 100%;
+        height: 36px;
+        border-bottom: 1px solid $border-color;
+        &:not(:last-child) {
+            margin-bottom: 20px;
+        }
+        &--toggled {
+            display: flex;
+        }
+        &--disabled {
+            border-bottom-style: dashed;
+        }
+         input {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            font-size: 16px;
+            &:disabled {
+                background-color: transparent;
+                cursor: not-allowed;
+            }
+            &:focus {
+                outline: none;
+            }
+            &::placeholder {
+                font-size: 16px;
+                color: #cccccc;
+            }
+        }
+    }
+}
+

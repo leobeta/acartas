@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 
-import { AddPatientComponent } from '../add-patient/add-patient.component';
+import { AddEditPatientComponent } from '../add-edit-patient/add-edit-patient.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -45,7 +45,7 @@ export class PatientComponent implements OnInit {
   }
 
   addEditPatient(id?: number) {
-    const dialogRef = this.dialog.open(AddPatientComponent, {
+    const dialogRef = this.dialog.open(AddEditPatientComponent, {
       width: '550px',
       disableClose: true,
       data: { id: id },
@@ -59,7 +59,6 @@ export class PatientComponent implements OnInit {
   }
 
   deletePatient(id: number) {
-    console.log('Delete patient ' + id);
     this.patientService.deletePatient(id).subscribe(() => {
       this.getData();
     })

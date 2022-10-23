@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit, AfterViewInit {
   ngOnInit(): void {
   }
 
-  isLoggedIn() {
+  get isLoggedIn() {
     return this.userService.isUserAuthenticated();
   }
 

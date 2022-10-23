@@ -2,13 +2,20 @@ table {
   width: 100%;
 }
 
+.btn {
+  cursor: pointer;
+}
+
+.btnEdit {
+  color: cornflowerblue;
+}
+
+.btnDelete {
+  color: darkred;
+}
 .mat-form-field {
   font-size: 14px;
   width: 80%;
-}
-
-td, th {
-  width: 25%;
 }
 
 .headerTableContainer {

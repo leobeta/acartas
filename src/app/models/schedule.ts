@@ -2,8 +2,9 @@ import { Patient } from "./patient";
 
 export interface BasicSchedule {
   id?: number;
-  appointmentDate: Date;
-  patient: Patient;
+  date: string;
+  patientId: Patient;
+  userId: number;
 }
 
 export interface Schedule extends BasicSchedule {

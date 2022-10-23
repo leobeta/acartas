@@ -1,6 +1,40 @@
 <p>{{operation}} Appointment</p>
-
-<mat-dialog-actions align="end">
-  <button mat-raised-button mat-dialog-close (click)="closeDialog()" type="button">Cancel</button>
-  <button mat-raised-button cdkFocusInitial type="submit" color="primary">Save</button>
-</mat-dialog-actions>
+<form [formGroup]="form" (ngSubmit)="addEditSchedule()">
+  <mat-dialog-content>
+    <div class="row">
+      <mat-form-field class="med-width" appearance="fill">
+        <mat-label>Fecha de Cita</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="appointmentDate" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="med-width">
+        <mat-label>Hora</mat-label>
+        <input matTimepicker #t="matTimepicker" mode="24h" placeholder="Please select time..." [required]="true"
+          name="time" [minDate]="minValue" [maxDate]="maxValue" formControlName="time">
+        <mat-icon matSuffix (click)="t.showDialog()">access_time</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Paciente</mat-label>
+        <mat-select matNativeControl required formControlName="patient">
+          <mat-option value=""></mat-option>
+          <mat-option *ngFor="let patient of patientList" [value]="patient.id">
+            {{patient.firstname}} {{patient.lastname}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <mat-form-field class="full-width" appearance="fill">
+        <mat-label>Observaciones</mat-label>
+        <textarea matInput formControlName="notes" placeholder="Ej. es una persona ..."></textarea>
+      </mat-form-field>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close (click)="closeDialog()" type="button">Cancel</button>
+    <button mat-raised-button cdkFocusInitial type="submit" color="primary">Save</button>
+  </mat-dialog-actions>
+</form>

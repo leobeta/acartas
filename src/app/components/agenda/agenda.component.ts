@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { AddEditScheduleComponent } from '../add-edit-schedule/add-edit-schedule.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,7 +14,7 @@ import { ScheduleService } from 'src/app/services/schedule.service';
   styleUrls: ['./agenda.component.scss']
 })
 export class AgendaComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'appointmentDate', 'patient', 'notes'];
+  displayedColumns: string[] = ['id', 'appointmentDate', 'patient', 'notes', 'status', 'actions'];
   dataSource!: MatTableDataSource<Schedule>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -29,7 +29,6 @@ export class AgendaComponent implements OnInit {
 
   getData() {
     this.scheduleService.getAllActiveSchedule().subscribe((res) => {
-      console.log(res)
       this.dataSource = new MatTableDataSource(res);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -44,7 +43,6 @@ export class AgendaComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
   addEditAppointment(id?: number) {
     const dialogRef = this.dialog.open(AddEditScheduleComponent, {
       width: '60%',
@@ -56,6 +54,12 @@ export class AgendaComponent implements OnInit {
       if (result) {
         this.getData();
       }
+    })
+  }
+
+  deleteAppointment(id: number) {
+    this.scheduleService.deleteSchedule(id).subscribe(() => {
+      this.getData();
     })
   }
 }
