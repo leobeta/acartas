@@ -84,11 +84,13 @@ export class AddEditPatientComponent implements OnInit {
     if (!this.isEdit(this.id)) {
       this.patientService.postPatient(patient).subscribe((res) => {
         this.openSnackBar(res);
+        this.closeDialog(res);
       })
     } else {
       patient.id = this.id;
       this.patientService.patchPatient(this.id!, patient).subscribe((res) => {
         this.openSnackBar(res);
+        this.closeDialog(res);
       })
     }
   }
@@ -100,7 +102,7 @@ export class AddEditPatientComponent implements OnInit {
     });
   }
 
-  closeDialog() {
-    this.dialogRef.close();
+  closeDialog(data: any) {
+    this.dialogRef.close(data);
   }
 }

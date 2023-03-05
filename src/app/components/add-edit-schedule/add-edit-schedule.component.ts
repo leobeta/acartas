@@ -30,7 +30,7 @@ export class AddEditScheduleComponent implements OnInit {
     public dialogRef: MatDialogRef<AddEditScheduleComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
-      appointmentDate: [null, [Validators.required]],
+      date: [null, [Validators.required]],
       time: [null, [Validators.required]],
       notes: [''],
       patient: [null, [Validators.required]],
@@ -64,8 +64,10 @@ export class AddEditScheduleComponent implements OnInit {
 
   getSchedule(id: number) {
     this.scheduleService.getScheduleById(id.toString()).subscribe(data => {
+      console.log(data)
       this.form.setValue({
         date: data[0].date ? new Date(data[0].date) : undefined,
+        time: data[0].date ? data[0].date.slice(12, 20) : undefined,
         notes: data[0].notes,
         patient: data[0].patientId,
       });
