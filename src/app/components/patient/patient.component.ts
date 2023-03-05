@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { AddEditPatientComponent } from '../add-edit-patient/add-edit-patient.component';
 import { MatDialog } from '@angular/material/dialog';

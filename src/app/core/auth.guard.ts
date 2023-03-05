@@ -8,7 +8,9 @@ import { UserService } from '../services/user.service';
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router, private userService: UserService) {}
+  private userId = localStorage.getItem('userId') || '';
+  constructor(private router: Router, private userService: UserService) {
+  }
 
   canActivate(
     route: ActivatedRouteSnapshot,

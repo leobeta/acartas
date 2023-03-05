@@ -1,4 +1,4 @@
-import { Observable, map } from 'rxjs';
+import { Observable, map, of } from 'rxjs';
 
 import { API } from './../models/api';
 import { HttpClient } from '@angular/common/http';
@@ -28,8 +28,8 @@ export class UserService {
 
   getLoggedUser() {
     if (localStorage.getItem('token')) {
-      return true;
+      return localStorage.getItem('token');
     }
-    return false;
+    return null;
   }
 }
