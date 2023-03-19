@@ -10,12 +10,11 @@ export class TokenInterceptor implements HttpInterceptor {
   constructor(private userService: UserService) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const token = this.userService.getLoggedUser() ? this.userService.getLoggedUser() : null;
+    const token = this.userService.getLoggedUser()?.toString();
     if (token) {
-      const header = `Bearer ${token}`
       req = req.clone({
         setHeaders: {
-          Authorization: header
+          Authorization: `Bearer ${token}`
         }
       });
     }
