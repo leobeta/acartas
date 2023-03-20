@@ -17,8 +17,8 @@ export class ScheduleService {
     return this.http.get<Schedule[]>(API.schedule);
   }
 
-  getScheduleById(id: string): Observable<Schedule[]> {
-    return this.http.get<Schedule[]>(API.schedule + `/${id}`);
+  getScheduleById(id: string): Observable<Schedule> {
+    return this.http.get<Schedule>(API.schedule + `/${id}`);
   }
 
   postSchedule(schedule: Schedule): Observable<any> {

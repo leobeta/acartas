@@ -15,8 +15,8 @@ export class ConsultationService {
     return this.http.get<Consultation[]>(API.consultation);
   }
 
-  getConsultationById(id: string): Observable<Consultation[]> {
-    return this.http.get<Consultation[]>(API.consultation + `/${id}`);
+  getConsultationById(id: string): Observable<Consultation> {
+    return this.http.get<Consultation>(API.consultation + `/${id}`);
   }
 
   postConsultation(consultation: Consultation): Observable<any> {

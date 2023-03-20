@@ -17,7 +17,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class AddEditScheduleComponent implements OnInit {
   form: FormGroup;
   id: number;
-  operation: string = 'Create ';
+  operation: string = 'Agregar ';
   patientList: Patient[];
   minValue: Date;
   maxValue: Date;
@@ -66,10 +66,10 @@ export class AddEditScheduleComponent implements OnInit {
     this.scheduleService.getScheduleById(id.toString()).subscribe(data => {
       console.log(data)
       this.form.setValue({
-        date: data[0].date ? new Date(data[0].date) : undefined,
-        time: data[0].date ? data[0].date.slice(12, 20) : undefined,
-        notes: data[0].notes,
-        patient: data[0].patientId,
+        date: data.date ? new Date(data.date) : undefined,
+        time: data.date ? data.date.slice(12, 20) : undefined,
+        notes: data.notes,
+        patient: data.patientId,
       });
     })
   }

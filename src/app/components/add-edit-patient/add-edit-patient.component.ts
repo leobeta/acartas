@@ -15,7 +15,7 @@ export class AddEditPatientComponent implements OnInit {
 
   form: FormGroup;
   id: number;
-  operation: string = 'Agregar '
+  operation: string = 'Agregar ';
 
   constructor(
     private patientService: PatientService,
@@ -53,15 +53,15 @@ export class AddEditPatientComponent implements OnInit {
   getPatient(id: number) {
     this.patientService.getPatientById(id.toString()).subscribe(data => {
       this.form.setValue({
-        firstname: data[0].firstname,
-        lastname: data[0].lastname,
-        dob: data[0].dob ? new Date(data[0].dob) : undefined,
-        nationality: data[0].nationality,
-        residenceCountry: data[0].residenceCountry,
-        locality: data[0].locality,
-        occupation: data[0].occupation,
-        telephone: data[0].telephone,
-        email: data[0].email,
+        firstname: data.firstname,
+        lastname: data.lastname,
+        dob: data.dob ? new Date(data.dob) : undefined,
+        nationality: data.nationality,
+        residenceCountry: data.residenceCountry,
+        locality: data.locality,
+        occupation: data.occupation,
+        telephone: data.telephone,
+        email: data.email,
       })
     })
   }

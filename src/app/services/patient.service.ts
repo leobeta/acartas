@@ -18,8 +18,8 @@ export class PatientService {
     return this.http.get<Patient[]>(API.patient);
   }
 
-  getPatientById(id: string): Observable<Patient[]> {
-    return this.http.get<Patient[]>(API.patient + `/${id}`);
+  getPatientById(id: string): Observable<Patient> {
+    return this.http.get<Patient>(API.patient + `/${id}`);
   }
 
   postPatient(patient: Patient): Observable<any> {

@@ -1,1 +1,33 @@
-<p>add-edit-cases works!</p>
+<h1 mat-dialog-title>{{operation}} Casos</h1>
+<form [formGroup]="form" (ngSubmit)="addEditConsultation()">
+  <mat-dialog-content>
+    <div class="row">
+      <mat-form-field class="mid-width" appearance="fill">
+        <mat-label>Fecha Inicial</mat-label>
+        <input matInput formControlName="consultationDate">
+      </mat-form-field>
+      <mat-form-field class="mid-width" appearance="fill">
+        <mat-label>Fecha de Cita</mat-label>
+        <input matInput formControlName="appointmentDate">
+      </mat-form-field>
+    </div>
+    <div class="row">
+      <div class="row">
+        <mat-form-field class="full-width" appearance="fill">
+          <mat-label>Paciente</mat-label>
+          <mat-select matNativeControl required formControlName="patient">
+            <mat-option value=""></mat-option>
+            <mat-option *ngFor="let patient of patientList" [value]="patient.id">
+              {{patient.firstname}} {{patient.lastname}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+    <input hidden="userId">
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-raised-button mat-dialog-close (click)="closeDialog(false)" type="button">Cancel</button>
+    <button mat-raised-button cdkFocusInitial type="submit" color="primary">Save</button>
+  </mat-dialog-actions>
+</form>
