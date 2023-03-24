@@ -23,12 +23,12 @@
 
     <ng-container matColumnDef="appointmentDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Ultima Consulta</th>
-      <td mat-cell *matCellDef="let row"> {{row.appointmentDate | date: 'dd/MM/YYYY HH:mm:ss'}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.date | date: 'dd/MM/YYYY HH:mm:ss'}} </td>
     </ng-container>
 
     <ng-container matColumnDef="patient">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Paciente</th>
-      <td mat-cell *matCellDef="let row"> {{row.patient[0].firstname}} {{row.patient[0].lastname}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.firstname}} {{row.lastname}} </td>
     </ng-container>
 
     <ng-container matColumnDef="actions">
@@ -36,6 +36,9 @@
       <td mat-cell *matCellDef="let row">
         <button mat-icon-button color="primary" matToolTip="Edit" (click)="addEditCase(row.id)">
           <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="accent" matToolTip="Edit" (click)="addObservation(row.id)">
+          <mat-icon>file_open</mat-icon>
         </button>
         <button mat-icon-button color="warn" matToolTip="Delete" (click)="deleteCase(row.id)">
           <mat-icon>delete</mat-icon>

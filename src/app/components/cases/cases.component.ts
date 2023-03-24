@@ -8,7 +8,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {PatientService} from "../../services/patient.service";
 import {Patient} from "../../models/patient";
-import {forkJoin, map, Observable, switchMap} from "rxjs";
+import {catchError, combineLatest, forkJoin, map, Observable, of, startWith, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-cases',
@@ -42,33 +42,16 @@ export class CasesComponent implements OnInit {
   }
 
   private getData() {
-    this.combineData().subscribe((res) => {
+    this.consultationService.getAllConsultation().subscribe((res) => {
       this.dataSource = new MatTableDataSource(res);
-      console.log(this.dataSource);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    });
-  }
-
-  combineData(): Observable<any[]> {
-    return this.consultationService.getAllConsultation().pipe(
-      switchMap((consultations: Consultation[]) => {
-        const observables = consultations.map(consultation => {
-          return this.patientService.getPatientById(consultation.idPatient.toString()).pipe(
-            map(patient => {
-              // Combine the data from the two methods
-              return { ...consultation, patient };
-            })
-          );
-        });
-        return forkJoin(observables);
-      })
-    );
+    })
   }
 
   addEditCase(id ?: number) {
     const dialogRef = this.dialog.open(AddEditCasesComponent, {
-      width: '550px',
+      width: '70%',
       disableClose: true,
       data: {id: id},
     });
@@ -78,6 +61,10 @@ export class CasesComponent implements OnInit {
         this.getData();
       }
     });
+  }
+
+  addObservation(id: number) {
+
   }
 
   deleteCase(id

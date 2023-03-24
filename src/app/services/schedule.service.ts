@@ -1,8 +1,8 @@
-import { API } from "../models/api";
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { Schedule } from "../models/schedule";
+import {API} from "../models/api";
+import {HttpClient} from "@angular/common/http";
+import {Injectable} from "@angular/core";
+import {firstValueFrom, lastValueFrom} from "rxjs";
+import {Schedule} from "../models/schedule";
 
 @Injectable({
   providedIn: 'root'
@@ -13,23 +13,60 @@ export class ScheduleService {
   constructor(private http: HttpClient) {
   }
 
-  getAllActiveSchedule(): Observable<Schedule[]> {
-    return this.http.get<Schedule[]>(API.schedule);
+  async getAllSchedule(): Promise<any> {
+    try {
+      const observable = this.http.get<any>(API.schedule);
+      const schedule = await lastValueFrom(observable);
+      return schedule
+    } catch(error) {
+      console.error('An error occurred while fetching schedules:', error);
+      throw error;
+    }
+
   }
 
-  getScheduleById(id: string): Observable<Schedule> {
-    return this.http.get<Schedule>(API.schedule + `/${id}`);
+  async getScheduleById(id: string): Promise<any> {
+    try {
+      const observable = this.http.get<Schedule>(API.schedule + `/${id}`);
+      const schedule = await firstValueFrom(observable);
+      return schedule
+    } catch(error) {
+      console.error('An error occurred while fetching the schedule:', error);
+      throw error;
+    }
   }
 
-  postSchedule(schedule: Schedule): Observable<any> {
-    return this.http.post<Schedule>(API.schedule, schedule)
+  async postSchedule(schedule: Schedule): Promise<any> {
+    try {
+      const observable = this.http.post<Schedule>(API.schedule, schedule);
+      const response = await lastValueFrom(observable);
+      return response;
+    } catch (error) {
+      console.error('An error occurred while posting the schedule:', error);
+      throw error;
+    }
   }
 
-  patchSchedule(id: number, schedule: Schedule): Observable<any> {
-    return this.http.patch(API.schedule + `/${id}`, schedule);
+
+  async patchSchedule(id: number, schedule: Schedule): Promise<any> {
+    try {
+      const observable = this.http.patch(API.schedule + `/${id}`, schedule);
+      const response = await lastValueFrom(observable);
+      return response;
+    }catch(error) {
+      console.error('An error occurred while updating the schedule:', error);
+      throw error;
+    }
   }
 
-  deleteSchedule(id: number): Observable<void> {
-    return this.http.delete<void>(API.schedule + `/${id}`);
+  async deleteSchedule(id: number): Promise<void> {
+    try {
+      const observable = this.http.delete<void>(API.schedule + `/${id}`);
+      const response = await lastValueFrom(observable);
+      return response
+    }catch(error) {
+      console.error('An error occurred while deleting the schedule:', error);
+      throw error;
+    }
   }
 }

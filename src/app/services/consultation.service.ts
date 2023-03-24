@@ -1,7 +1,7 @@
 import { API } from "../models/api";
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import {map, Observable} from 'rxjs';
 import { Consultation } from '../models/consultation';
 
 @Injectable({
@@ -15,8 +15,8 @@ export class ConsultationService {
     return this.http.get<Consultation[]>(API.consultation);
   }
 
-  getConsultationById(id: string): Observable<Consultation> {
-    return this.http.get<Consultation>(API.consultation + `/${id}`);
+  getConsultationById(id: number): Observable<Consultation[]> {
+    return this.http.get<Consultation[]>(API.consultation + `/${id}`);
   }
 
   postConsultation(consultation: Consultation): Observable<any> {

@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 
-import { AddEditScheduleComponent } from '../add-edit-schedule/add-edit-schedule.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Schedule } from 'src/app/models/schedule';
-import { ScheduleService } from 'src/app/services/schedule.service';
+import {AddEditScheduleComponent} from '../add-edit-schedule/add-edit-schedule.component';
+import {MatDialog} from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {Schedule} from 'src/app/models/schedule';
+import {ScheduleService} from 'src/app/services/schedule.service';
 
 @Component({
   selector: 'app-agenda',
@@ -15,7 +15,13 @@ import { ScheduleService } from 'src/app/services/schedule.service';
 })
 export class AgendaComponent implements OnInit {
   displayedColumns: string[] = ['id', 'appointmentDate', 'patient', 'notes', 'status', 'actions'];
-  dataSource!: MatTableDataSource<Schedule>;
+  dataSourceActive!: MatTableDataSource<Schedule>;
+  dataSourcePast!: MatTableDataSource<Schedule>;
+  dataSourceCancelled!: MatTableDataSource<Schedule>;
+  activeSchedules: Schedule[] = [];
+  pastSchedules: Schedule[] = [];
+  cancelledSchedules: Schedule[] = [];
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -28,26 +34,58 @@ export class AgendaComponent implements OnInit {
   }
 
   getData() {
-    this.scheduleService.getAllActiveSchedule().subscribe((res) => {
-      this.dataSource = new MatTableDataSource(res);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    })
+    this.scheduleService.getAllSchedule().then((res: any) => {
+      const now = new Date();
+      res.forEach((schedule: any) => {
+        if (schedule.sActive) {
+          if (new Date(schedule.date) >= now) {
+            this.activeSchedules.push(schedule);
+          } else {
+            this.pastSchedules.push(schedule);
+          }
+        } else {
+          this.cancelledSchedules.push(schedule);
+        }
+      });
+
+      this.dataSourceActive = new MatTableDataSource(this.activeSchedules);
+      this.dataSourceActive.paginator = this.paginator;
+      this.dataSourceActive.sort = this.sort;
+
+      this.dataSourcePast = new MatTableDataSource(this.pastSchedules);
+      this.dataSourcePast.paginator = this.paginator;
+      this.dataSourceActive.sort = this.sort
+
+      this.dataSourceCancelled = new MatTableDataSource(this.cancelledSchedules);
+      this.dataSourceCancelled.paginator = this.paginator;
+      this.dataSourceCancelled.sort = this.sort;
+    });
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSourceActive.filter = filterValue.trim().toLowerCase();
+    this.dataSourcePast.filter = filterValue.trim().toLowerCase();
+    this.dataSourceCancelled.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    if (this.dataSourceActive.paginator) {
+      this.dataSourceActive.paginator.firstPage();
+    }
+
+    if (this.dataSourcePast.paginator) {
+      this.dataSourcePast.paginator.firstPage();
+    }
+
+    if (this.dataSourceCancelled.paginator) {
+      this.dataSourceCancelled.paginator.firstPage();
     }
   }
+
   addEditAppointment(id?: number) {
     const dialogRef = this.dialog.open(AddEditScheduleComponent, {
       width: '60%',
       disableClose: true,
-      data: { id: id },
+      data: {id: id},
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -58,8 +96,15 @@ export class AgendaComponent implements OnInit {
   }
 
   deleteAppointment(id: number) {
-    this.scheduleService.deleteSchedule(id).subscribe(() => {
+    this.scheduleService.deleteSchedule(id).then(() => {
       this.getData();
     })
+      .catch((err) => {
+        console.error(err);
+      })
+  }
+
+  activeAppointment(sId: any) {
+
   }
 }

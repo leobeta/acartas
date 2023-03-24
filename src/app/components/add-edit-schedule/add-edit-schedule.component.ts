@@ -1,13 +1,13 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Patient } from 'src/app/models/patient';
-import { Schedule } from 'src/app/models/schedule';
-import { PatientService } from 'src/app/services/patient.service';
+import {Component, Inject, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {Patient} from 'src/app/models/patient';
+import {Schedule} from 'src/app/models/schedule';
+import {PatientService} from 'src/app/services/patient.service';
 import * as moment from 'moment'
 
-import { ScheduleService } from '../../services/schedule.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {ScheduleService} from '../../services/schedule.service';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-edit-schedule',
@@ -22,13 +22,13 @@ export class AddEditScheduleComponent implements OnInit {
   minValue: Date;
   maxValue: Date;
 
-  constructor(
-    private scheduleService: ScheduleService,
-    private patientService: PatientService,
-    private fb: FormBuilder,
-    private snackBar: MatSnackBar,
-    public dialogRef: MatDialogRef<AddEditScheduleComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(private scheduleService: ScheduleService,
+              private patientService: PatientService,
+              private fb: FormBuilder,
+              private snackBar: MatSnackBar,
+              public dialogRef: MatDialogRef<AddEditScheduleComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any) {
+
     this.form = this.fb.group({
       date: [null, [Validators.required]],
       time: [null, [Validators.required]],
@@ -63,13 +63,12 @@ export class AddEditScheduleComponent implements OnInit {
   }
 
   getSchedule(id: number) {
-    this.scheduleService.getScheduleById(id.toString()).subscribe(data => {
-      console.log(data)
+    this.scheduleService.getScheduleById(id.toString()).then(data => {
       this.form.setValue({
         date: data.date ? new Date(data.date) : undefined,
-        time: data.date ? data.date.slice(12, 20) : undefined,
+        time: data.date ? new Date(data.date) : undefined,
         notes: data.notes,
-        patient: data.patientId,
+        patient: data.pId,
       });
     })
   }
@@ -86,7 +85,7 @@ export class AddEditScheduleComponent implements OnInit {
     }
 
     const schedule: Schedule = {
-      date: this.getFullDate(this.form.value.appointmentDate, this.form.value.time),
+      date: this.getFullDate(this.form.value.date, this.form.value.time),
       notes: this.form.value.notes || null,
       patientId: this.form.value.patient,
       userId: Number(localStorage.getItem('userId')),
@@ -94,26 +93,28 @@ export class AddEditScheduleComponent implements OnInit {
     }
 
     if (!this.isEdit(this.id)) {
-      this.scheduleService.postSchedule(schedule).subscribe((res) => {
+      this.scheduleService.postSchedule(schedule).then((res) => {
         this.openSnackBar(res);
       })
     } else {
       schedule.id = this.id;
-      this.scheduleService.patchSchedule(this.id!, schedule).subscribe((res) => {
+      this.scheduleService.patchSchedule(this.id!, schedule).then((res) => {
         this.openSnackBar(res);
       })
     }
   }
 
   openSnackBar(data: any) {
-    this.snackBar.open(data, 'Splash', {
+    console.log(data)
+    this.snackBar.open(`Informacion guardada correctamente ${data.changedRows}`, 'Cerrar', {
       horizontalPosition: 'end',
       verticalPosition: 'top',
+      duration: 3000
     });
   }
 
-  getFullDate(appointmentDate: Date, time: Date): string {
-    const dateString = `${appointmentDate.toLocaleDateString('en-US')} ${time.toLocaleTimeString('en-GB')}`;
+  getFullDate(date: Date, time: Date): string {
+    const dateString = `${date.toLocaleDateString('en-US')} ${time.toLocaleTimeString('en-GB')}`;
     const [month, day, year, hour, minutes, seconds] = dateString.split(/\D/).map(Number);
 
     return moment(new Date(year, month - 1, day, hour, minutes, seconds)).format("YYYY-MM-DD HH:mm:ss");

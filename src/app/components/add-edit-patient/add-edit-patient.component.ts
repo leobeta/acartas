@@ -51,7 +51,7 @@ export class AddEditPatientComponent implements OnInit {
   }
 
   getPatient(id: number) {
-    this.patientService.getPatientById(id.toString()).subscribe(data => {
+    this.patientService.getPatientById(id).subscribe((data) => {
       this.form.setValue({
         firstname: data.firstname,
         lastname: data.lastname,
@@ -78,6 +78,7 @@ export class AddEditPatientComponent implements OnInit {
       residenceCountry: this.form.value.residenceCountry || null,
       locality: this.form.value.locality || null,
       occupation: this.form.value.occupation || null,
+      telephone: this.form.value.telephone || null,
       email: this.form.value.email || null,
       active: true
     }
@@ -96,9 +97,10 @@ export class AddEditPatientComponent implements OnInit {
   }
 
   openSnackBar(data: any) {
-    this.snackBar.open(data, 'Splash', {
+    this.snackBar.open(`Informacion guardada correctamente ${data.changedRows}`, 'Cerrar', {
       horizontalPosition: 'end',
       verticalPosition: 'top',
+      duration: 3000
     });
   }
 
