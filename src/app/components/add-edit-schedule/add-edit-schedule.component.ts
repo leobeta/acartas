@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
 import {Patient} from 'src/app/models/patient';
 import {Schedule} from 'src/app/models/schedule';
 import {PatientService} from 'src/app/services/patient.service';
@@ -8,6 +8,7 @@ import * as moment from 'moment'
 
 import {ScheduleService} from '../../services/schedule.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import {AddEditPatientComponent} from "../add-edit-patient/add-edit-patient.component";
 
 @Component({
   selector: 'app-add-edit-schedule',
@@ -26,6 +27,7 @@ export class AddEditScheduleComponent implements OnInit {
               private patientService: PatientService,
               private fb: FormBuilder,
               private snackBar: MatSnackBar,
+              private dialog: MatDialog,
               public dialogRef: MatDialogRef<AddEditScheduleComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any) {
 
@@ -34,7 +36,14 @@ export class AddEditScheduleComponent implements OnInit {
       time: [null, [Validators.required]],
       notes: [''],
       patient: [null, [Validators.required]],
-    })
+    });
+
+    this.form.get('patient')?.valueChanges.subscribe(value => {
+      if(value === 'new-patient') {
+        this.openAddEditPatientComponent();
+      }
+    });
+
     this.id = data.id;
     this.patientList = [];
     const minValue = new Date();
@@ -73,10 +82,14 @@ export class AddEditScheduleComponent implements OnInit {
     })
   }
 
-  getPatientList() {
+  getPatientList(idCreated?: number) {
     this.patientService.getAllPatients().subscribe((res) => {
-      this.patientList = res;
-    })
+      this.patientList = res.sort((a, b) => a.firstname.localeCompare(b.firstname));
+    });
+
+    if(idCreated) {
+      this.form.get('patient')?.setValue(idCreated);
+    }
   }
 
   addEditSchedule() {
@@ -94,19 +107,21 @@ export class AddEditScheduleComponent implements OnInit {
 
     if (!this.isEdit(this.id)) {
       this.scheduleService.postSchedule(schedule).then((res) => {
-        this.openSnackBar(res);
+        this.openSnackBar();
+        this.closeDialog();
       })
     } else {
       schedule.id = this.id;
       this.scheduleService.patchSchedule(this.id!, schedule).then((res) => {
-        this.openSnackBar(res);
+        this.openSnackBar();
+        this.closeDialog();
       })
     }
   }
 
-  openSnackBar(data: any) {
-    console.log(data)
-    this.snackBar.open(`Informacion guardada correctamente ${data.changedRows}`, 'Cerrar', {
+  openSnackBar() {
+    console.log()
+    this.snackBar.open(`Informacion guardada correctamente!`, 'Cerrar', {
       horizontalPosition: 'end',
       verticalPosition: 'top',
       duration: 3000
@@ -124,4 +139,15 @@ export class AddEditScheduleComponent implements OnInit {
     this.dialogRef.close();
   }
 
+  private openAddEditPatientComponent() {
+    const dialogRef = this.dialog.open(AddEditPatientComponent, {
+      width: '550px',
+      disableClose: true,
+      data: {id: undefined},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getPatientList(result.patient.id);
+    });
+  }
 }

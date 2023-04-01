@@ -51,6 +51,8 @@
         <td class="mat-cell" colspan="4">No data to display</td>
       </tr>
     </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [length]="dataSourceActive.data.length">
+    </mat-paginator>
   </mat-tab>
   <mat-tab label="Pacientes inactivos">
     <table mat-table [dataSource]="dataSourceInactive" matSort>
@@ -90,8 +92,7 @@
         <td class="mat-cell" colspan="4">No data to display</td>
       </tr>
     </table>
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" aria-label="Select page of patients" [length]="dataSourceInactive.data.length">
+    </mat-paginator>
   </mat-tab>
 </mat-tab-group>
-<mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" aria-label="Select page of patients">
-</mat-paginator>
-

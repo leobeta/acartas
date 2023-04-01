@@ -21,7 +21,8 @@ export class PatientComponent implements OnInit {
   activePatients: Patient[] = [];
   inactivePatients: Patient[] = [];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatPaginator) activePaginator!: MatPaginator;
+  @ViewChild(MatPaginator) inactivePaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private dialog: MatDialog, private patientService: PatientService) {
@@ -56,11 +57,11 @@ export class PatientComponent implements OnInit {
       });
 
       this.dataSourceActive = new MatTableDataSource(this.activePatients);
-      this.dataSourceActive.paginator = this.paginator;
+      this.dataSourceActive.paginator = this.activePaginator;
       this.dataSourceActive.sort = this.sort;
 
       this.dataSourceInactive = new MatTableDataSource(this.inactivePatients)
-      this.dataSourceInactive.paginator = this.paginator;
+      this.dataSourceInactive.paginator = this.inactivePaginator;
       this.dataSourceInactive.sort = this.sort;
     });
   }

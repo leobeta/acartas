@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -84,20 +84,20 @@ export class AddEditPatientComponent implements OnInit {
     }
     if (!this.isEdit(this.id)) {
       this.patientService.postPatient(patient).subscribe((res) => {
-        this.openSnackBar(res);
+        this.openSnackBar();
         this.closeDialog(res);
       })
     } else {
       patient.id = this.id;
       this.patientService.patchPatient(this.id!, patient).subscribe((res) => {
-        this.openSnackBar(res);
+        this.openSnackBar();
         this.closeDialog(res);
       })
     }
   }
 
-  openSnackBar(data: any) {
-    this.snackBar.open(`Informacion guardada correctamente ${data.changedRows}`, 'Cerrar', {
+  openSnackBar() {
+    this.snackBar.open(`Informacion guardada correctamente!`, 'Cerrar', {
       horizontalPosition: 'end',
       verticalPosition: 'top',
       duration: 3000

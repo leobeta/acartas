@@ -18,8 +18,11 @@
     <div class="row">
       <mat-form-field class="full-width" appearance="fill">
         <mat-label>Paciente</mat-label>
-        <mat-select matNativeControl required formControlName="patient">
+        <mat-select matNativeControl required formControlName="patient" >
           <mat-option value=""></mat-option>
+          <mat-option value="new-patient">
+            <span class="new-patient-text">Nuevo Paciente...</span>
+          </mat-option>
           <mat-option *ngFor="let patient of patientList" [value]="patient.id">
             {{patient.firstname}} {{patient.lastname}}
           </mat-option>
