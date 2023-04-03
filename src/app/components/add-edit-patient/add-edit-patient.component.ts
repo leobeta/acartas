@@ -51,7 +51,7 @@ export class AddEditPatientComponent implements OnInit {
   }
 
   getPatient(id: number) {
-    this.patientService.getPatientById(id).subscribe((data) => {
+    this.patientService.getPatientById(id).then((data) => {
       this.form.setValue({
         firstname: data.firstname,
         lastname: data.lastname,
@@ -63,7 +63,9 @@ export class AddEditPatientComponent implements OnInit {
         telephone: data.telephone,
         email: data.email,
       })
-    })
+    }).catch((err) => {
+      console.error(err);
+    });
   }
 
   addEditPatient() {
@@ -83,16 +85,20 @@ export class AddEditPatientComponent implements OnInit {
       active: true
     }
     if (!this.isEdit(this.id)) {
-      this.patientService.postPatient(patient).subscribe((res) => {
+      this.patientService.postPatient(patient).then((res) => {
         this.openSnackBar();
         this.closeDialog(res);
-      })
+      }).catch((err) => {
+        console.error(err);
+      });
     } else {
       patient.id = this.id;
-      this.patientService.patchPatient(this.id!, patient).subscribe((res) => {
+      this.patientService.patchPatient(patient).then((res) => {
         this.openSnackBar();
         this.closeDialog(res);
-      })
+      }).catch((err) => {
+        console.error(err);
+      });
     }
   }
 

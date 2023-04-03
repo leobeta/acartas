@@ -69,9 +69,11 @@ export class AddEditCasesComponent implements OnInit {
   }
 
   getCase(id: number) {
-    this.consultationService.getConsultationById(id).subscribe(data => {
-      const consultationData: Consultation = data[0];
-      this.patientService.getPatientById(consultationData.idPatient).subscribe(patient => {
+    this.consultationService.getConsultationById(id).then(data => {
+      const consultationData: Consultation = data;
+      this.patientService.getPatientById(consultationData.idPatient).then(patient => {
+      }).catch((err) => {
+        console.error(err);
       });
       this.form.setValue({
         consultationDate: consultationData.consultationDate ? new Date(consultationData.consultationDate) : undefined,
@@ -87,9 +89,11 @@ export class AddEditCasesComponent implements OnInit {
   }
 
   getPatientList() {
-    this.patientService.getAllPatients().subscribe((res) => {
+    this.patientService.getAllPatients().then((res) => {
       this.patientList = res;
-    })
+    }).catch((err) => {
+      console.error(err);
+    });
   }
 
   addEditConsultation() {
@@ -108,13 +112,13 @@ export class AddEditCasesComponent implements OnInit {
       active: true,
     }
     if (!this.isEdit(this.id)) {
-      this.consultationService.postConsultation(consultation).subscribe((res) => {
+      this.consultationService.postConsultation(consultation).then((res) => {
         this.openSnackBar(res);
         this.closeDialog(res);
       })
     } else {
       consultation.id = this.id;
-      this.consultationService.patchConsultation(this.id!, consultation).subscribe((res) => {
+      this.consultationService.patchConsultation(this.id!, consultation).then((res) => {
         this.openSnackBar(res);
         this.closeDialog(res);
       })

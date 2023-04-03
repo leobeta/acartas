@@ -1,5 +1,4 @@
 import {AddEditCasesComponent} from '../add-edit-cases/add-edit-cases.component';
-import {Consultation} from '../../models/consultation';
 import {ConsultationService} from '../../services/consultation.service';
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
@@ -7,8 +6,7 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {PatientService} from "../../services/patient.service";
-import {Patient} from "../../models/patient";
-import {catchError, combineLatest, forkJoin, map, Observable, of, startWith, switchMap} from "rxjs";
+import {Consultation} from "../../models/consultation";
 
 @Component({
   selector: 'app-cases',
@@ -18,9 +16,13 @@ import {catchError, combineLatest, forkJoin, map, Observable, of, startWith, swi
 export class CasesComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'consultationDate', 'appointmentDate', 'patient', 'actions'];
-  dataSource!: MatTableDataSource<any>;
+  dataSourceActive!: MatTableDataSource<any>;
+  dataSourceInactive!: MatTableDataSource<any>;
+  activeCases: Consultation[] = [];
+  inactiveCases: Consultation[] = [];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('activeCases') activePaginator!: MatPaginator;
+  @ViewChild('inactiveCases') inactivePaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private consultationService: ConsultationService,
@@ -34,19 +36,33 @@ export class CasesComponent implements OnInit {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSourceActive.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    if (this.dataSourceActive.paginator) {
+      this.dataSourceActive.paginator.firstPage();
     }
   }
 
   private getData() {
-    this.consultationService.getAllConsultation().subscribe((res) => {
-      this.dataSource = new MatTableDataSource(res);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    })
+    this.activeCases = [];
+    this.inactiveCases = [];
+    this.consultationService.getAllConsultation().then((res: any) => {
+      res.forEach((cases: any) => {
+        if (cases.active) {
+          this.activeCases.push(cases);
+        } else {
+          this.inactiveCases.push(cases);
+        }
+      });
+
+      this.dataSourceActive = new MatTableDataSource(this.activeCases);
+      this.dataSourceActive.paginator = this.activePaginator;
+      this.dataSourceActive.sort = this.sort;
+
+      this.dataSourceInactive = new MatTableDataSource(this.inactiveCases);
+      this.dataSourceInactive.paginator = this.inactivePaginator;
+      this.dataSourceInactive.sort = this.sort;
+    });
   }
 
   addEditCase(id ?: number) {
@@ -67,12 +83,11 @@ export class CasesComponent implements OnInit {
 
   }
 
-  deleteCase(id
-               :
-               number
-  ) {
-    this.consultationService.deleteConsultation(id).subscribe(() => {
+  deleteCase(id: number) {
+    this.consultationService.deleteConsultation(id).then(() => {
       this.getData();
-    })
+    }).catch((err) => {
+      console.error(err);
+    });
   }
 }

@@ -1,34 +1,65 @@
-import { API } from "../models/api";
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import {map, Observable} from 'rxjs';
-import { Consultation } from '../models/consultation';
+import {API} from "../models/api";
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {firstValueFrom, lastValueFrom} from 'rxjs';
+import {Consultation} from '../models/consultation';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConsultationService {
 
-  constructor(private http: HttpClient) { }
-
-  getAllConsultation(): Observable<Consultation[]> {
-    return this.http.get<Consultation[]>(API.consultation);
+  constructor(private http: HttpClient) {
   }
 
-  getConsultationById(id: number): Observable<Consultation[]> {
-    return this.http.get<Consultation[]>(API.consultation + `/${id}`);
+  async getAllConsultation(): Promise<any> {
+    try {
+      const observable = this.http.get<any>(API.consultation);
+      return await lastValueFrom(observable);
+    } catch (error) {
+      console.error('An error occurred while fetching consultations:', error);
+      throw error;
+    }
   }
 
-  postConsultation(consultation: Consultation): Observable<any> {
-    return this.http.post<Consultation>(API.consultation, consultation);
+  async getConsultationById(id: number): Promise<Consultation> {
+    try {
+      const observable = this.http.get<Consultation>(API.consultation + `/${id}`);
+      return await firstValueFrom(observable);
+    }catch (error) {
+      console.error('An error occurred while fetching consultation:', error);
+      throw error;
+    }
   }
 
-  patchConsultation(id: number, Consultation: Consultation): Observable<any> {
-    return this.http.patch(API.consultation + `/${id}`, Consultation);
+  async postConsultation(consultation: Consultation): Promise<Consultation> {
+    try {
+      const observable = this.http.post<Consultation>(API.consultation, consultation);
+      return await lastValueFrom(observable);
+    } catch (error) {
+      console.error('An error occurred while posting the consultation:', error);
+      throw error;
+    }
   }
 
-  deleteConsultation(id: number): Observable<void> {
-    return this.http.delete<void>(API.consultation + `/${id}`);
+  async patchConsultation(id: number, consultation: Consultation): Promise<any> {
+    try {
+      const observable = this.http.patch(API.consultation + `/${id}`, consultation);
+      return await lastValueFrom(observable);
+    } catch (error) {
+      console.error('An error occurred while updating the consultation:', error);
+      throw error;
+    }
+  }
+
+  async deleteConsultation(id: number): Promise<void> {
+    try {
+      const observable = this.http.delete<void>(API.consultation + `/${id}`);
+      return await lastValueFrom(observable)
+    }catch(error) {
+      console.error('An error occurred while deleting the consultation:', error);
+      throw error;
+    }
   }
 
 }

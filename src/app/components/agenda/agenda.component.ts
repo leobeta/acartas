@@ -23,7 +23,9 @@ export class AgendaComponent implements OnInit {
   cancelledSchedules: Schedule[] = [];
 
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('activePaginator') activePaginator!: MatPaginator;
+  @ViewChild('pastPaginator') pastPaginator!: MatPaginator;
+  @ViewChild('cancelledPaginator') cancelledPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private dialog: MatDialog, private scheduleService: ScheduleService) {
@@ -35,6 +37,9 @@ export class AgendaComponent implements OnInit {
 
   getData() {
     this.scheduleService.getAllSchedule().then((res: any) => {
+      this.activeSchedules = [];
+      this.pastSchedules = [];
+      this.cancelledSchedules = [];
       const now = new Date();
       res.forEach((schedule: any) => {
         if (schedule.sActive) {
@@ -49,15 +54,15 @@ export class AgendaComponent implements OnInit {
       });
 
       this.dataSourceActive = new MatTableDataSource(this.activeSchedules);
-      this.dataSourceActive.paginator = this.paginator;
+      this.dataSourceActive.paginator = this.activePaginator;
       this.dataSourceActive.sort = this.sort;
 
       this.dataSourcePast = new MatTableDataSource(this.pastSchedules);
-      this.dataSourcePast.paginator = this.paginator;
+      this.dataSourcePast.paginator = this.pastPaginator;
       this.dataSourceActive.sort = this.sort
 
       this.dataSourceCancelled = new MatTableDataSource(this.cancelledSchedules);
-      this.dataSourceCancelled.paginator = this.paginator;
+      this.dataSourceCancelled.paginator = this.cancelledPaginator;
       this.dataSourceCancelled.sort = this.sort;
     });
   }

@@ -38,7 +38,7 @@
           <button mat-icon-button color="primary" matToolTip="Edit" (click)="addEditPatient(row.id)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" matToolTip="Delete" (click)="deletePatient(row.id)">
+          <button mat-icon-button color="warn" matToolTip="Delete" (click)="deletePatient(row)">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
@@ -51,7 +51,7 @@
         <td class="mat-cell" colspan="4">No data to display</td>
       </tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" [length]="dataSourceActive.data.length">
+    <mat-paginator #activePaginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10">
     </mat-paginator>
   </mat-tab>
   <mat-tab label="Pacientes inactivos">
@@ -92,7 +92,7 @@
         <td class="mat-cell" colspan="4">No data to display</td>
       </tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" aria-label="Select page of patients" [length]="dataSourceInactive.data.length">
+    <mat-paginator #inactivePaginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10">
     </mat-paginator>
   </mat-tab>
 </mat-tab-group>

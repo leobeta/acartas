@@ -12,6 +12,7 @@ import {PatientComponent} from "../patient/patient.component";
 import {ReactiveFormsModule} from "@angular/forms";
 import {ShareModule} from "src/app/share/share.module";
 import {AddEditObservation} from "../add-edit-observation/add-edit-observation";
+import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import {AddEditObservation} from "../add-edit-observation/add-edit-observation";
     AddEditScheduleComponent,
     AddEditCasesComponent,
     AddEditObservation,
+    ConfirmationDialogComponent,
   ],
   imports: [
     CommonModule,

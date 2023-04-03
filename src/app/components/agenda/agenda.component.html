@@ -59,7 +59,7 @@
         <td class="mat-cell" colspan="4">No data para mostrar</td>
       </tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" aria-label="Select page of agenda">
+    <mat-paginator #activePaginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10">
     </mat-paginator>
   </mat-tab>
   <mat-tab label="Citas Pasadas">
@@ -111,7 +111,7 @@
         <td class="mat-cell" colspan="4">No data para mostrar</td>
       </tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" aria-label="Select page of agenda">
+    <mat-paginator #pastPaginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" aria-label="Select page of agenda">
     </mat-paginator>
   </mat-tab>
   <mat-tab label="Citas Canceladas">
@@ -160,7 +160,7 @@
         <td class="mat-cell" colspan="4">No data para mostrar</td>
       </tr>
     </table>
-    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" aria-label="Select page of agenda">
+    <mat-paginator #cancelledPaginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" aria-label="Select page of agenda">
     </mat-paginator>
   </mat-tab>
 </mat-tab-group>

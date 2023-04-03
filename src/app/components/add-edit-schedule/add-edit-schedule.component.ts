@@ -83,8 +83,10 @@ export class AddEditScheduleComponent implements OnInit {
   }
 
   getPatientList(idCreated?: number) {
-    this.patientService.getAllPatients().subscribe((res) => {
+    this.patientService.getAllPatients().then((res) => {
       this.patientList = res.sort((a, b) => a.firstname.localeCompare(b.firstname));
+    }).catch((err) => {
+      console.error(err);
     });
 
     if(idCreated) {

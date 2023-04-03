@@ -7,6 +7,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {Patient} from 'src/app/models/patient';
 import {PatientService} from 'src/app/services/patient.service';
+import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-patient',
@@ -21,8 +22,8 @@ export class PatientComponent implements OnInit {
   activePatients: Patient[] = [];
   inactivePatients: Patient[] = [];
 
-  @ViewChild(MatPaginator) activePaginator!: MatPaginator;
-  @ViewChild(MatPaginator) inactivePaginator!: MatPaginator;
+  @ViewChild('activePaginator') activePaginator!: MatPaginator;
+  @ViewChild('inactivePaginator') inactivePaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private dialog: MatDialog, private patientService: PatientService) {
@@ -47,7 +48,9 @@ export class PatientComponent implements OnInit {
   }
 
   getData() {
-    this.patientService.getAllPatients().subscribe((res) => {
+    this.activePatients = [];
+    this.inactivePatients = [];
+    this.patientService.getAllPatients().then((res: Patient[]) => {
       res.forEach((patient: Patient) => {
         if (patient.active) {
           this.activePatients.push(patient);
@@ -80,9 +83,41 @@ export class PatientComponent implements OnInit {
     });
   }
 
-  deletePatient(id: number) {
-    this.patientService.deletePatient(id).subscribe(() => {
-      this.getData();
-    })
+  patientStatusChange(patient: Patient) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '250px',
+      data: `Seguro que desea borrar el paciente ${patient.firstname} ${patient.lastname}?`
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        if (patient.id != null) {
+          this.patientService.deletePatient(patient.id).then(() => {
+            this.getData();
+          }).catch((err) => {
+            console.error(err);
+          });
+        }
+      }
+    });
+  }
+
+  deletePatient(patient: Patient) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '250px',
+      data: `Seguro que desea borrar el paciente ${patient.firstname} ${patient.lastname}?`
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        if (patient.id != null) {
+          this.patientService.deletePatient(patient.id).then(() => {
+            this.getData();
+          }).catch((err) => {
+            console.error(err);
+          });
+        }
+      }
+    });
   }
 }
