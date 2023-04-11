@@ -135,6 +135,7 @@ export class AddEditScheduleComponent implements OnInit {
           this.openSnackBar();
           this.closeDialog();
         } else {
+          console.log(res)
           this.openSnackBar('No se puede crear cita por conflicto con otra cita');
         }
       });
