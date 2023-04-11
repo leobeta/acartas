@@ -1,12 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
-import {AddEditScheduleComponent} from '../add-edit-schedule/add-edit-schedule.component';
-import {MatDialog} from '@angular/material/dialog';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {Schedule} from 'src/app/models/schedule';
-import {ScheduleService} from 'src/app/services/schedule.service';
+import { AddEditScheduleComponent } from '../add-edit-schedule/add-edit-schedule.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Schedule } from 'src/app/models/schedule';
+import { ScheduleService } from 'src/app/services/schedule.service';
 
 @Component({
   selector: 'app-agenda',
@@ -88,9 +88,9 @@ export class AgendaComponent implements OnInit {
 
   addEditAppointment(id?: number) {
     const dialogRef = this.dialog.open(AddEditScheduleComponent, {
-      width: '60%',
+      width: '30%',
       disableClose: true,
-      data: {id: id},
+      data: { id: id },
     });
 
     dialogRef.afterClosed().subscribe(result => {

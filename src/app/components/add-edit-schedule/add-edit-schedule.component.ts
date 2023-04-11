@@ -1,14 +1,16 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from '@angular/material/dialog';
-import {Patient} from 'src/app/models/patient';
-import {Schedule} from 'src/app/models/schedule';
-import {PatientService} from 'src/app/services/patient.service';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Patient } from '../../models/patient';
+import { Schedule } from '../../models/schedule';
+import { PatientService } from '../../services/patient.service';
 import * as moment from 'moment'
 
-import {ScheduleService} from '../../services/schedule.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {AddEditPatientComponent} from "../add-edit-patient/add-edit-patient.component";
+import { ScheduleService } from '../../services/schedule.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AddEditPatientComponent } from "../add-edit-patient/add-edit-patient.component";
+import { ConsultationService } from '../../services/consultation.service';
+import { Consultation } from 'src/app/models/consultation';
 
 @Component({
   selector: 'app-add-edit-schedule',
@@ -24,12 +26,13 @@ export class AddEditScheduleComponent implements OnInit {
   maxValue: Date;
 
   constructor(private scheduleService: ScheduleService,
-              private patientService: PatientService,
-              private fb: FormBuilder,
-              private snackBar: MatSnackBar,
-              private dialog: MatDialog,
-              public dialogRef: MatDialogRef<AddEditScheduleComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any) {
+    private patientService: PatientService,
+    private consultationService: ConsultationService,
+    private fb: FormBuilder,
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+    public dialogRef: MatDialogRef<AddEditScheduleComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
 
     this.form = this.fb.group({
       date: [null, [Validators.required]],
@@ -39,7 +42,7 @@ export class AddEditScheduleComponent implements OnInit {
     });
 
     this.form.get('patient')?.valueChanges.subscribe(value => {
-      if(value === 'new-patient') {
+      if (value === 'new-patient') {
         this.openAddEditPatientComponent();
       }
     });
@@ -64,7 +67,7 @@ export class AddEditScheduleComponent implements OnInit {
 
   isEdit(id: number | undefined): boolean {
     if (id !== undefined) {
-      this.operation = 'Edit ';
+      this.operation = 'Editar ';
       this.getSchedule(id);
       return true;
     }
@@ -74,11 +77,13 @@ export class AddEditScheduleComponent implements OnInit {
   getSchedule(id: number) {
     this.scheduleService.getScheduleById(id.toString()).then(data => {
       this.form.setValue({
-        date: data.date ? new Date(data.date) : undefined,
-        time: data.date ? new Date(data.date) : undefined,
-        notes: data.notes,
-        patient: data.pId,
+        date: data[0].date ? new Date(data[0].date) : undefined,
+        time: data[0].date ? new Date(data[0].date) : undefined,
+        notes: data[0].notes,
+        patient: data[0].pId,
       });
+    }).catch((err) => {
+      console.error(err);
     })
   }
 
@@ -89,7 +94,7 @@ export class AddEditScheduleComponent implements OnInit {
       console.error(err);
     });
 
-    if(idCreated) {
+    if (idCreated) {
       this.form.get('patient')?.setValue(idCreated);
     }
   }
@@ -109,9 +114,30 @@ export class AddEditScheduleComponent implements OnInit {
 
     if (!this.isEdit(this.id)) {
       this.scheduleService.postSchedule(schedule).then((res) => {
-        this.openSnackBar();
-        this.closeDialog();
-      })
+        if (res) {
+          this.consultationService.getConsultationByPatientId(Number(schedule.patientId)).then((cRes) => {
+            if (res.size === 0) {
+              const consultation: Consultation = {
+                consultationDate: new Date(schedule.date),
+                date: new Date(schedule.date),
+                idPatient: Number(schedule.patientId),
+                idUser: Number(localStorage.getItem('userId')),
+                active: true
+              }
+              this.consultationService.postConsultation(consultation).then((resp) => {
+                console.log(resp);
+              })
+                .catch((err) => {
+                  console.error(err);
+                })
+            }
+          })
+          this.openSnackBar();
+          this.closeDialog();
+        } else {
+          this.openSnackBar('No se puede crear cita por conflicto con otra cita');
+        }
+      });
     } else {
       schedule.id = this.id;
       this.scheduleService.patchSchedule(this.id!, schedule).then((res) => {
@@ -121,12 +147,11 @@ export class AddEditScheduleComponent implements OnInit {
     }
   }
 
-  openSnackBar() {
-    console.log()
-    this.snackBar.open(`Informacion guardada correctamente!`, 'Cerrar', {
+  openSnackBar(mensaje?: string) {
+    this.snackBar.open(mensaje ? mensaje : `Informacion guardada correctamente!`, 'Cerrar', {
       horizontalPosition: 'end',
       verticalPosition: 'top',
-      duration: 3000
+      duration: 4000
     });
   }
 
@@ -145,7 +170,7 @@ export class AddEditScheduleComponent implements OnInit {
     const dialogRef = this.dialog.open(AddEditPatientComponent, {
       width: '550px',
       disableClose: true,
-      data: {id: undefined},
+      data: { id: undefined },
     });
 
     dialogRef.afterClosed().subscribe(result => {
