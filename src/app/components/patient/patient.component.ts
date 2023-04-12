@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 
-import { AddEditPatientComponent } from '../add-edit-patient/add-edit-patient.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Patient } from 'src/app/models/patient';
-import { PatientService } from 'src/app/services/patient.service';
+import {AddEditPatientComponent} from '../add-edit-patient/add-edit-patient.component';
+import {MatDialog} from '@angular/material/dialog';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {Patient} from 'src/app/models/patient';
+import {PatientService} from 'src/app/services/patient.service';
+import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-patient',
@@ -16,12 +17,17 @@ import { PatientService } from 'src/app/services/patient.service';
 export class PatientComponent implements OnInit {
 
   displayedColumns: string[] = ['id', 'name', 'dob', 'nationality', 'actions'];
-  dataSource!: MatTableDataSource<Patient>;
+  dataSourceActive!: MatTableDataSource<Patient>;
+  dataSourceInactive!: MatTableDataSource<Patient>;
+  activePatients: Patient[] = [];
+  inactivePatients: Patient[] = [];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('activePaginator') activePaginator!: MatPaginator;
+  @ViewChild('inactivePaginator') inactivePaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private dialog: MatDialog, private patientService: PatientService) { }
+  constructor(private dialog: MatDialog, private patientService: PatientService) {
+  }
 
   ngOnInit(): void {
     this.getData();
@@ -29,18 +35,37 @@ export class PatientComponent implements OnInit {
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.dataSourceActive.filter = filterValue.trim().toLowerCase();
+    this.dataSourceInactive.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    if (this.dataSourceActive.paginator) {
+      this.dataSourceActive.paginator.firstPage();
+    }
+
+    if (this.dataSourceInactive.paginator) {
+      this.dataSourceInactive.paginator.firstPage();
     }
   }
 
   getData() {
-    this.patientService.getAllPatients().subscribe((res) => {
-      this.dataSource = new MatTableDataSource(res);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+    this.activePatients = [];
+    this.inactivePatients = [];
+    this.patientService.getAllPatients().then((res: Patient[]) => {
+      res.forEach((patient: Patient) => {
+        if (patient.active) {
+          this.activePatients.push(patient);
+        } else {
+          this.inactivePatients.push(patient);
+        }
+      });
+
+      this.dataSourceActive = new MatTableDataSource(this.activePatients);
+      this.dataSourceActive.paginator = this.activePaginator;
+      this.dataSourceActive.sort = this.sort;
+
+      this.dataSourceInactive = new MatTableDataSource(this.inactivePatients)
+      this.dataSourceInactive.paginator = this.inactivePaginator;
+      this.dataSourceInactive.sort = this.sort;
     });
   }
 
@@ -48,7 +73,7 @@ export class PatientComponent implements OnInit {
     const dialogRef = this.dialog.open(AddEditPatientComponent, {
       width: '550px',
       disableClose: true,
-      data: { id: id },
+      data: {id: id},
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -58,9 +83,41 @@ export class PatientComponent implements OnInit {
     });
   }
 
-  deletePatient(id: number) {
-    this.patientService.deletePatient(id).subscribe(() => {
-      this.getData();
-    })
+  patientStatusChange(patient: Patient) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '250px',
+      data: `Seguro que desea borrar el paciente ${patient.firstname} ${patient.lastname}?`
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        if (patient.id != null) {
+          this.patientService.deletePatient(patient.id).then(() => {
+            this.getData();
+          }).catch((err) => {
+            console.error(err);
+          });
+        }
+      }
+    });
+  }
+
+  deletePatient(patient: Patient) {
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '250px',
+      data: `Seguro que desea borrar el paciente ${patient.firstname} ${patient.lastname}?`
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result) {
+        if (patient.id != null) {
+          this.patientService.deletePatient(patient.id).then(() => {
+            this.getData();
+          }).catch((err) => {
+            console.error(err);
+          });
+        }
+      }
+    });
   }
 }

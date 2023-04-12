@@ -24,11 +24,13 @@ export class LoginComponent implements OnInit {
 
   async submit() {
     if (this.form.valid) {
-      this.userService.login(this.form.value.username, this.form.value.password).subscribe((res) => {
+      this.userService.login(this.form.value.username, this.form.value.password).then((res) => {
         localStorage.setItem('token', res.token!);
         localStorage.setItem('userId', JSON.stringify(res.id));
         this.router.navigate(['/']);
-      })
+      }).catch((err) => {
+        console.error(err);
+      });
     }
   }
 

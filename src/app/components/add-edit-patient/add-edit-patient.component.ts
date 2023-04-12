@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -51,7 +51,7 @@ export class AddEditPatientComponent implements OnInit {
   }
 
   getPatient(id: number) {
-    this.patientService.getPatientById(id.toString()).subscribe(data => {
+    this.patientService.getPatientById(id).then((data) => {
       this.form.setValue({
         firstname: data.firstname,
         lastname: data.lastname,
@@ -63,7 +63,9 @@ export class AddEditPatientComponent implements OnInit {
         telephone: data.telephone,
         email: data.email,
       })
-    })
+    }).catch((err) => {
+      console.error(err);
+    });
   }
 
   addEditPatient() {
@@ -78,27 +80,33 @@ export class AddEditPatientComponent implements OnInit {
       residenceCountry: this.form.value.residenceCountry || null,
       locality: this.form.value.locality || null,
       occupation: this.form.value.occupation || null,
+      telephone: this.form.value.telephone || null,
       email: this.form.value.email || null,
       active: true
     }
     if (!this.isEdit(this.id)) {
-      this.patientService.postPatient(patient).subscribe((res) => {
-        this.openSnackBar(res);
+      this.patientService.postPatient(patient).then((res) => {
+        this.openSnackBar();
         this.closeDialog(res);
-      })
+      }).catch((err) => {
+        console.error(err);
+      });
     } else {
       patient.id = this.id;
-      this.patientService.patchPatient(this.id!, patient).subscribe((res) => {
-        this.openSnackBar(res);
+      this.patientService.patchPatient(patient).then((res) => {
+        this.openSnackBar();
         this.closeDialog(res);
-      })
+      }).catch((err) => {
+        console.error(err);
+      });
     }
   }
 
-  openSnackBar(data: any) {
-    this.snackBar.open(data, 'Splash', {
+  openSnackBar() {
+    this.snackBar.open(`Informacion guardada correctamente!`, 'Cerrar', {
       horizontalPosition: 'end',
       verticalPosition: 'top',
+      duration: 3000
     });
   }
 

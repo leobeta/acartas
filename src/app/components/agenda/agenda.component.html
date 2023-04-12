@@ -9,56 +9,159 @@
   </button>
 </div>
 
-<div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource" matSort>
-    <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-      <td mat-cell *matCellDef="let row"> {{row.sId}} </td>
-    </ng-container>
+<mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start">
+  <mat-tab label="Citas Activas">
+    <table mat-table [dataSource]="dataSourceActive" matSort>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID</th>
+        <td mat-cell *matCellDef="let row"> {{row.sId}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="appointmentDate">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de Cita </th>
-      <td mat-cell *matCellDef="let row"> {{row.date | date: 'dd/MM/YYYY HH:mm:ss'}} </td>
-    </ng-container>
+      <ng-container matColumnDef="appointmentDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de Cita</th>
+        <td mat-cell *matCellDef="let row"> {{row.date | date: 'dd/MM/YYYY HH:mm:ss'}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="patient">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Paciente </th>
-      <td mat-cell *matCellDef="let row"> {{row.firstname}} {{row.lastname}}</td>
-    </ng-container>
+      <ng-container matColumnDef="patient">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Paciente</th>
+        <td mat-cell *matCellDef="let row"> {{row.firstname}} {{row.lastname}}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="notes">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Notas </th>
-      <td mat-cell *matCellDef="let row"> {{row.notes}} </td>
-    </ng-container>
+      <ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Notas</th>
+        <td mat-cell *matCellDef="let row"> {{row.notes}} </td>
+      </ng-container>
 
-    <ng-container matColumnDef="status">
-      <th mat-header-cell *matHeaderCellDef> Estado </th>
-      <td mat-cell *matCellDef="let row">
-        <mat-icon mat-fab *ngIf="row.sActive != 1" color="warn">event_busy</mat-icon>
-        <mat-icon mat-fab *ngIf="row.sActive == 1" color="primary">event_available</mat-icon>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Estado</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-icon mat-fab *ngIf="row.sActive != 1" color="warn">event_busy</mat-icon>
+          <mat-icon mat-fab *ngIf="row.sActive == 1" color="primary">event_available</mat-icon>
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef></th>
-      <td mat-cell *matCellDef="let row">
-        <button mat-icon-button color="primary" matToolTip="Edit" (click)="addEditAppointment(row.sId)">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" matToolTip="Delete" (click)="deleteAppointment(row.sId)">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button color="primary" matToolTip="Edit" (click)="addEditAppointment(row.sId)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matToolTip="Delete" (click)="deleteAppointment(row.sId)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="4">No data para mostrar</td>
-    </tr>
-  </table>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data para mostrar</td>
+      </tr>
+    </table>
+    <mat-paginator #activePaginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10">
+    </mat-paginator>
+  </mat-tab>
+  <mat-tab label="Citas Pasadas">
+    <table mat-table [dataSource]="dataSourcePast" matSort>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID</th>
+        <td mat-cell *matCellDef="let row"> {{row.sId}} </td>
+      </ng-container>
 
-  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" aria-label="Select page of agenda">
-  </mat-paginator>
-</div>
+      <ng-container matColumnDef="appointmentDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de Cita</th>
+        <td mat-cell *matCellDef="let row"> {{row.date | date: 'dd/MM/YYYY HH:mm:ss'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="patient">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Paciente</th>
+        <td mat-cell *matCellDef="let row"> {{row.firstname}} {{row.lastname}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Notas</th>
+        <td mat-cell *matCellDef="let row"> {{row.notes}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Estado</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-icon mat-fab *ngIf="row.sActive != 1" color="warn">event_busy</mat-icon>
+          <mat-icon mat-fab *ngIf="row.sActive == 1" color="primary">event_available</mat-icon>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button color="primary" matToolTip="Edit" (click)="addEditAppointment(row.sId)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matToolTip="Delete" (click)="deleteAppointment(row.sId)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data para mostrar</td>
+      </tr>
+    </table>
+    <mat-paginator #pastPaginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" aria-label="Select page of agenda">
+    </mat-paginator>
+  </mat-tab>
+  <mat-tab label="Citas Canceladas">
+    <table mat-table [dataSource]="dataSourceCancelled" matSort>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> ID</th>
+        <td mat-cell *matCellDef="let row"> {{row.sId}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="appointmentDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de Cita</th>
+        <td mat-cell *matCellDef="let row"> {{row.date | date: 'dd/MM/YYYY HH:mm:ss'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="patient">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Paciente</th>
+        <td mat-cell *matCellDef="let row"> {{row.firstname}} {{row.lastname}}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="notes">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Notas</th>
+        <td mat-cell *matCellDef="let row"> {{row.notes}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Estado</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-icon mat-fab *ngIf="row.sActive != 1" color="warn">event_busy</mat-icon>
+          <mat-icon mat-fab *ngIf="row.sActive == 1" color="primary">event_available</mat-icon>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-icon-button color="primary" matToolTip="Edit" (click)="activeAppointment(row.sId)">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data para mostrar</td>
+      </tr>
+    </table>
+    <mat-paginator #cancelledPaginator [pageSizeOptions]="[5, 10, 25, 100]" [pageSize]="10" aria-label="Select page of agenda">
+    </mat-paginator>
+  </mat-tab>
+</mat-tab-group>
+

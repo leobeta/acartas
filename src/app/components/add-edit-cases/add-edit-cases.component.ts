@@ -1,12 +1,13 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Consultation} from 'src/app/models/consultation';
-import {ConsultationService} from 'src/app/services/consultation.service';
-import {Patient} from "../../models/patient";
-import {PatientService} from "../../services/patient.service";
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Consultation } from 'src/app/models/consultation';
+import { ConsultationService } from 'src/app/services/consultation.service';
+import { Patient } from "../../models/patient";
+import { PatientService } from "../../services/patient.service";
+import { map } from "rxjs";
 
 @Component({
   selector: 'app-add-edit-cases',
@@ -20,6 +21,8 @@ export class AddEditCasesComponent implements OnInit {
   operation: String = 'Agregar ';
   patientList: Patient[];
   userId: string | null;
+  enableBasicField = true;
+  reasonControl: any;
 
   constructor(
     private consultationService: ConsultationService,
@@ -30,7 +33,6 @@ export class AddEditCasesComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
       consultationDate: [null, [Validators.required]],
-      appointmentDate: [null, [Validators.required]],
       idPatient: ['', [Validators.required]],
       idUser: ['', [Validators.required]],
       reason: [''],
@@ -46,45 +48,58 @@ export class AddEditCasesComponent implements OnInit {
   ngOnInit(): void {
     this.getPatientList();
     this.isEdit(this.id);
+    this.reasonControl = this.form.get('reason');
+
+    this.reasonControl.valueChanges.subscribe((value: string) => {
+      if (value !== null && value.length > 5000) {
+        this.reasonControl.setValue(value.substring(0, 5000), { emitEvent: false });
+      }
+    })
   }
 
   isEdit(id: number | undefined): boolean {
     if (id !== undefined) {
       this.operation = 'Editar ';
       this.getCase(id);
+      this.enableBasicField = false;
       return true;
     }
     return false;
   }
 
   getCase(id: number) {
-    this.consultationService.getConsultationById(id.toString()).subscribe(data => {
+    this.consultationService.getConsultationById(id).then(data => {
+      const consultationData: Consultation = data;
+      this.patientService.getPatientById(consultationData.idPatient).then(patient => {
+      }).catch((err) => {
+        console.error(err);
+      });
       this.form.setValue({
-        consultationDate: data.consultationDate ? new Date(data.consultationDate) : undefined,
-        appointmentDate: data.appointmentDate ? new Date(data.appointmentDate) : undefined,
-        idPatient: data.idPatient,
-        idUser: data.idUser,
-        reason: data.reason,
-        topic: data.topic,
-        systemicDynamics: data.systemicDynamics,
-        solution: data.solution,
-      })
-    })
+        consultationDate: consultationData.consultationDate ? new Date(consultationData.consultationDate) : undefined,
+        idPatient: consultationData.idPatient,
+        idUser: consultationData.idUser,
+        reason: consultationData.reason,
+        topic: consultationData.topic,
+        systemicDynamics: consultationData.systemicDynamics,
+        solution: consultationData.solution,
+      });
+    });
   }
 
   getPatientList() {
-    this.patientService.getAllPatients().subscribe((res) => {
+    this.patientService.getAllPatients().then((res) => {
       this.patientList = res;
-    })
+    }).catch((err) => {
+      console.error(err);
+    });
   }
 
-  addEditConsultation() {
+  public addEditConsultation() {
     if (this.form.invalid) {
       return;
     }
     const consultation: Consultation = {
       consultationDate: this.form.value.consultationDate.toISOString().slice(0, 10),
-      appointmentDate: this.form.value.toISOString().slice(0, 10),
       idPatient: this.form.value.idPatient,
       idUser: this.form.value.idUser,
       reason: this.form.value.reason,
@@ -94,13 +109,13 @@ export class AddEditCasesComponent implements OnInit {
       active: true,
     }
     if (!this.isEdit(this.id)) {
-      this.consultationService.postConsultation(consultation).subscribe((res) => {
+      this.consultationService.postConsultation(consultation).then((res) => {
         this.openSnackBar(res);
         this.closeDialog(res);
       })
     } else {
       consultation.id = this.id;
-      this.consultationService.patchConsultation(this.id!, consultation).subscribe((res) => {
+      this.consultationService.patchConsultation(consultation).then((res) => {
         this.openSnackBar(res);
         this.closeDialog(res);
       })
@@ -108,9 +123,10 @@ export class AddEditCasesComponent implements OnInit {
   }
 
   openSnackBar(data: any) {
-    this.snackBar.open(data, 'Splash', {
+    this.snackBar.open(`Informacion guardada correctamente.`, 'Cerrar', {
       horizontalPosition: 'end',
       verticalPosition: 'top',
+      duration: 3000
     });
   }
 

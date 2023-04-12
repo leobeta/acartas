@@ -1,29 +1,46 @@
-import { Observable, map, of } from 'rxjs';
+import {firstValueFrom} from 'rxjs';
 
-import { API } from './../models/api';
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { User } from '../models/user';
+import {API} from '../models/api';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Router} from '@angular/router';
+import {User} from '../models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor(private router: Router, private httpClient: HttpClient) { }
-
-  isUserAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
+  constructor(private router: Router, private httpClient: HttpClient) {
   }
 
-  login(username: string, password: string): Observable<User> {
-    return this.httpClient.post<User>(API.user.login, { username: username, password: password });
+  async isUserAuthenticated(): Promise<boolean> {
+    try {
+      return !!localStorage.getItem('token');
+    } catch (error) {
+      console.error('An error occurred while fetching user is authenticated:', error);
+      throw error;
+    }
   }
 
-  logout(): void {
-    localStorage.clear()
-    this.router.navigate(['/login']);
+  async login(username: string, password: string): Promise<User> {
+    try {
+      const observable = this.httpClient.post<User>(API.user.login, {username: username, password: password});
+      return await firstValueFrom(observable);
+    } catch (error) {
+      console.error('An error occurred while login the user:', error);
+      throw error;
+    }
+  }
+
+  async logout(): Promise<void> {
+    try {
+      localStorage.clear()
+      await this.router.navigate(['/login']);
+    } catch (error) {
+      console.error('An error occurred while logout the user:', error);
+      throw error;
+    }
   }
 
   getLoggedUser() {
