@@ -1,12 +1,13 @@
-import {AddEditCasesComponent} from '../add-edit-cases/add-edit-cases.component';
-import {ConsultationService} from '../../services/consultation.service';
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {PatientService} from "../../services/patient.service";
-import {Consultation} from "../../models/consultation";
+import { Component, OnInit, ViewChild } from '@angular/core';
+
+import { AddEditCasesComponent } from '../add-edit-cases/add-edit-cases.component';
+import { Consultation } from "../../models/consultation";
+import { ConsultationService } from '../../services/consultation.service';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { PatientService } from "../../services/patient.service";
 
 @Component({
   selector: 'app-cases',
@@ -26,8 +27,8 @@ export class CasesComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private consultationService: ConsultationService,
-              private patientService: PatientService,
-              private dialog: MatDialog) {
+    private patientService: PatientService,
+    private dialog: MatDialog) {
   }
 
   ngOnInit(): void {
@@ -65,11 +66,11 @@ export class CasesComponent implements OnInit {
     });
   }
 
-  addEditCase(id ?: number) {
+  addEditCase(id?: number) {
     const dialogRef = this.dialog.open(AddEditCasesComponent, {
       width: '70%',
       disableClose: true,
-      data: {id: id},
+      data: { id: id },
     });
 
     dialogRef.afterClosed().subscribe(result => {

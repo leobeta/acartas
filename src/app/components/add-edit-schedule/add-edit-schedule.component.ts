@@ -114,36 +114,24 @@ export class AddEditScheduleComponent implements OnInit {
 
     if (!this.isEdit(this.id)) {
       this.scheduleService.postSchedule(schedule).then((res) => {
-        if (res) {
-          this.consultationService.getConsultationByPatientId(Number(schedule.patientId)).then((cRes) => {
-            if (res.size === 0) {
-              const consultation: Consultation = {
-                consultationDate: new Date(schedule.date),
-                date: new Date(schedule.date),
-                idPatient: Number(schedule.patientId),
-                idUser: Number(localStorage.getItem('userId')),
-                active: true
-              }
-              this.consultationService.postConsultation(consultation).then((resp) => {
-                console.log(resp);
-              })
-                .catch((err) => {
-                  console.error(err);
-                })
-            }
-          })
+        if (!res.message) {
           this.openSnackBar();
           this.closeDialog();
         } else {
-          console.log(res)
-          this.openSnackBar('No se puede crear cita por conflicto con otra cita');
+          this.openSnackBar(res.message);
+          this.closeDialog();
         }
       });
     } else {
       schedule.id = this.id;
       this.scheduleService.patchSchedule(this.id!, schedule).then((res) => {
-        this.openSnackBar();
-        this.closeDialog();
+        if (!res.message) {
+          this.openSnackBar();
+          this.closeDialog();
+        } else {
+          this.openSnackBar(res.message);
+          this.closeDialog();
+        }
       })
     }
   }

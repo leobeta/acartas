@@ -9,14 +9,6 @@
         <mat-datepicker #picker1></mat-datepicker>
       </mat-form-field>
       <mat-form-field class="mid-width" appearance="fill">
-        <mat-label>Fecha de Cita</mat-label>
-        <input matInput [matDatepicker]="picker2" formControlName="appointmentDate">
-        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-        <mat-datepicker #picker2></mat-datepicker>
-      </mat-form-field>
-    </div>
-    <div class="row" [ngClass]="{'disabled': !enableBasicField}">
-      <mat-form-field class="full-width" appearance="fill">
         <mat-label>Paciente</mat-label>
         <mat-select matNativeControl required formControlName="idPatient">
           <mat-option value=""></mat-option>
@@ -41,7 +33,8 @@
       </mat-form-field>
       <mat-form-field class="mid-width" appearance="fill">
         <mat-label>Dinamica sistemica</mat-label>
-        <textarea matInput rows="4" placeholder="Ingresa la dinamica sistemica" formControlName="systemicDynamics"></textarea>
+        <textarea matInput rows="4" placeholder="Ingresa la dinamica sistemica"
+          formControlName="systemicDynamics"></textarea>
         <mat-hint align="end">{{reasonControl.value?.length || 0}} / 5000</mat-hint>
       </mat-form-field>
     </div>

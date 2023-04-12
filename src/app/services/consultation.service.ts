@@ -44,9 +44,9 @@ export class ConsultationService {
     }
   }
 
-  async patchConsultation(id: number, consultation: Consultation): Promise<any> {
+  async patchConsultation(consultation: Consultation): Promise<any> {
     try {
-      const observable = this.http.patch(API.consultation + `/${id}`, consultation);
+      const observable = this.http.patch(API.consultation, consultation);
       return await lastValueFrom(observable);
     } catch (error) {
       console.error('An error occurred while updating the consultation:', error);

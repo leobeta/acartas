@@ -1,13 +1,13 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Consultation} from 'src/app/models/consultation';
-import {ConsultationService} from 'src/app/services/consultation.service';
-import {Patient} from "../../models/patient";
-import {PatientService} from "../../services/patient.service";
-import {map} from "rxjs";
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Consultation } from 'src/app/models/consultation';
+import { ConsultationService } from 'src/app/services/consultation.service';
+import { Patient } from "../../models/patient";
+import { PatientService } from "../../services/patient.service";
+import { map } from "rxjs";
 
 @Component({
   selector: 'app-add-edit-cases',
@@ -33,7 +33,6 @@ export class AddEditCasesComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.form = this.fb.group({
       consultationDate: [null, [Validators.required]],
-      date: [null, [Validators.required]],
       idPatient: ['', [Validators.required]],
       idUser: ['', [Validators.required]],
       reason: [''],
@@ -52,8 +51,8 @@ export class AddEditCasesComponent implements OnInit {
     this.reasonControl = this.form.get('reason');
 
     this.reasonControl.valueChanges.subscribe((value: string) => {
-      if(value.length > 5000) {
-        this.reasonControl.setValue(value.substring(0, 5000), {emitEvent: false});
+      if (value !== null && value.length > 5000) {
+        this.reasonControl.setValue(value.substring(0, 5000), { emitEvent: false });
       }
     })
   }
@@ -77,7 +76,6 @@ export class AddEditCasesComponent implements OnInit {
       });
       this.form.setValue({
         consultationDate: consultationData.consultationDate ? new Date(consultationData.consultationDate) : undefined,
-        date: consultationData.date ? new Date(consultationData.date) : undefined,
         idPatient: consultationData.idPatient,
         idUser: consultationData.idUser,
         reason: consultationData.reason,
@@ -96,13 +94,12 @@ export class AddEditCasesComponent implements OnInit {
     });
   }
 
-  addEditConsultation() {
+  public addEditConsultation() {
     if (this.form.invalid) {
       return;
     }
     const consultation: Consultation = {
       consultationDate: this.form.value.consultationDate.toISOString().slice(0, 10),
-      date: this.form.value.toISOString().slice(0, 10),
       idPatient: this.form.value.idPatient,
       idUser: this.form.value.idUser,
       reason: this.form.value.reason,
@@ -118,7 +115,7 @@ export class AddEditCasesComponent implements OnInit {
       })
     } else {
       consultation.id = this.id;
-      this.consultationService.patchConsultation(this.id!, consultation).then((res) => {
+      this.consultationService.patchConsultation(consultation).then((res) => {
         this.openSnackBar(res);
         this.closeDialog(res);
       })
@@ -126,7 +123,7 @@ export class AddEditCasesComponent implements OnInit {
   }
 
   openSnackBar(data: any) {
-    this.snackBar.open(`Informacion guardada correctamente ${data.changedRows}`, 'Cerrar', {
+    this.snackBar.open(`Informacion guardada correctamente.`, 'Cerrar', {
       horizontalPosition: 'end',
       verticalPosition: 'top',
       duration: 3000

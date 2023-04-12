@@ -1,9 +1,9 @@
-import {HttpClient} from "@angular/common/http";
+import { firstValueFrom, lastValueFrom } from "rxjs";
 
-import {API} from "../models/api";
-import {Injectable} from "@angular/core";
-import {firstValueFrom, lastValueFrom} from "rxjs";
-import {Patient} from "../models/patient";
+import { API } from "../models/api";
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Patient } from "../models/patient";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class PatientService {
     try {
       const observable = this.http.get<Patient>(API.patient + `/${id}`);
       return await firstValueFrom(observable);
-    }catch (error) {
+    } catch (error) {
       console.error('An error occurred while fetching patient:', error);
       throw error;
     }
@@ -48,7 +48,7 @@ export class PatientService {
     try {
       const observable = this.http.patch(API.patient, patient);
       return await lastValueFrom(observable);
-    }catch(error) {
+    } catch (error) {
       console.error('An error occurred while updating the patient:', error);
       throw error;
     }
@@ -58,7 +58,7 @@ export class PatientService {
     try {
       const observable = this.http.delete<void>(API.patient + `/${id}`);
       return await lastValueFrom(observable)
-    }catch(error) {
+    } catch (error) {
       console.error('An error occurred while deleting the patient:', error);
       throw error;
     }

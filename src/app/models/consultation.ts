@@ -2,7 +2,7 @@ import { Patient } from 'src/app/models/patient';
 export interface BasicConsultation {
   id?: number;
   consultationDate: Date;
-  date: Date;
+  date?: Date;
   idPatient: number;
   idUser: number;
   active: boolean;
