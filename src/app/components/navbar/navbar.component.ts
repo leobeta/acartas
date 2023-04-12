@@ -5,7 +5,7 @@ import { delay, filter } from 'rxjs';
 
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material/sidenav';
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from '../../services/user.service';
 
 @UntilDestroy()
 @Component({

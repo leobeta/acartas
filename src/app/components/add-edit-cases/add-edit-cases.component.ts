@@ -3,11 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Consultation } from 'src/app/models/consultation';
-import { ConsultationService } from 'src/app/services/consultation.service';
+import { Consultation } from '../../models/consultation';
+import { ConsultationService } from '../../services/consultation.service';
 import { Patient } from "../../models/patient";
 import { PatientService } from "../../services/patient.service";
-import { map } from "rxjs";
 
 @Component({
   selector: 'app-add-edit-cases',

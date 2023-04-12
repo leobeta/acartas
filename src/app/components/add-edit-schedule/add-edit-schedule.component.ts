@@ -10,7 +10,6 @@ import { ScheduleService } from '../../services/schedule.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddEditPatientComponent } from "../add-edit-patient/add-edit-patient.component";
 import { ConsultationService } from '../../services/consultation.service';
-import { Consultation } from 'src/app/models/consultation';
 
 @Component({
   selector: 'app-add-edit-schedule',

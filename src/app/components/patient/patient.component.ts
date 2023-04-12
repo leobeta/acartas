@@ -5,8 +5,8 @@ import {MatDialog} from '@angular/material/dialog';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import {Patient} from 'src/app/models/patient';
-import {PatientService} from 'src/app/services/patient.service';
+import {Patient} from '../../models/patient';
+import {PatientService} from '../../services/patient.service';
 import {ConfirmationDialogComponent} from "../confirmation-dialog/confirmation-dialog.component";
 
 @Component({

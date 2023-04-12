@@ -1,5 +1,4 @@
 import { AgendaComponent } from "../agenda/agenda.component";
-import { AuthGuard } from "src/app/core/auth.guard";
 import { CasesComponent } from "../cases/cases.component";
 import { HomeComponent } from "./home.component";
 import { NgModule } from "@angular/core";

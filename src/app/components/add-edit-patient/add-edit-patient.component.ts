@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Patient } from 'src/app/models/patient';
-import { PatientService } from 'src/app/services/patient.service';
+import { Patient } from '../../models/patient';
+import { PatientService } from '../../services/patient.service';
 
 @Component({
   selector: 'app-add-edit-patient',

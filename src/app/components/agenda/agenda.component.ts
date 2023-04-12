@@ -5,8 +5,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Schedule } from 'src/app/models/schedule';
-import { ScheduleService } from 'src/app/services/schedule.service';
+import { Schedule } from '../../models/schedule';
+import { ScheduleService } from '../../services/schedule.service';
 
 @Component({
   selector: 'app-agenda',
