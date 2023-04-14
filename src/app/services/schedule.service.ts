@@ -36,6 +36,16 @@ export class ScheduleService {
     }
   }
 
+  async getScheduleStatistics(): Promise<any> {
+    try {
+      const observable = this.http.get<any>(API.schedule + '/stats');
+      return await lastValueFrom(observable);
+    } catch (error) {
+      console.error('An error occurred while fetching the schedule statistics:', error);
+      throw error;
+    }
+  }
+
   async postSchedule(schedule: Schedule): Promise<any> {
     try {
       const observable = this.http.post<Schedule>(API.schedule, schedule);
