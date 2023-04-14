@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Patient } from '../../models/patient';
-import { Schedule } from '../../models/schedule';
+import { Agenda } from '../../models/schedule';
 import { PatientService } from '../../services/patient.service';
 import * as moment from 'moment'
 
@@ -76,8 +76,8 @@ export class AddEditScheduleComponent implements OnInit {
   getSchedule(id: number) {
     this.scheduleService.getScheduleById(id.toString()).then(data => {
       this.form.setValue({
-        date: data[0].date ? new Date(data[0].date) : undefined,
-        time: data[0].date ? new Date(data[0].date) : undefined,
+        date: data[0].fecha ? new Date(data[0].fecha) : undefined,
+        time: data[0].fecha ? new Date(data[0].fecha) : undefined,
         notes: data[0].notes,
         patient: data[0].pId,
       });
@@ -103,8 +103,8 @@ export class AddEditScheduleComponent implements OnInit {
       return;
     }
 
-    const schedule: Schedule = {
-      date: this.getFullDate(this.form.value.date, this.form.value.time),
+    const schedule: Agenda = {
+      fecha: this.getFullDate(this.form.value.date, this.form.value.time),
       notes: this.form.value.notes || null,
       patientId: this.form.value.patient,
       userId: Number(localStorage.getItem('userId')),

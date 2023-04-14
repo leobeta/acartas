@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Schedule } from '../../models/schedule';
+import { Agenda } from '../../models/schedule';
 import { ScheduleService } from '../../services/schedule.service';
 
 @Component({
@@ -15,12 +15,12 @@ import { ScheduleService } from '../../services/schedule.service';
 })
 export class AgendaComponent implements OnInit {
   displayedColumns: string[] = ['id', 'appointmentDate', 'patient', 'notes', 'status', 'actions'];
-  dataSourceActive!: MatTableDataSource<Schedule>;
-  dataSourcePast!: MatTableDataSource<Schedule>;
-  dataSourceCancelled!: MatTableDataSource<Schedule>;
-  activeSchedules: Schedule[] = [];
-  pastSchedules: Schedule[] = [];
-  cancelledSchedules: Schedule[] = [];
+  dataSourceActive!: MatTableDataSource<Agenda>;
+  dataSourcePast!: MatTableDataSource<Agenda>;
+  dataSourceCancelled!: MatTableDataSource<Agenda>;
+  activeSchedules: Agenda[] = [];
+  pastSchedules: Agenda[] = [];
+  cancelledSchedules: Agenda[] = [];
 
 
   @ViewChild('activePaginator') activePaginator!: MatPaginator;
@@ -43,7 +43,7 @@ export class AgendaComponent implements OnInit {
       const now = new Date();
       res.forEach((schedule: any) => {
         if (schedule.sActive) {
-          if (new Date(schedule.date) >= now) {
+          if (new Date(schedule.fecha) >= now) {
             this.activeSchedules.push(schedule);
           } else {
             this.pastSchedules.push(schedule);

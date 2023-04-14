@@ -4,7 +4,7 @@ import { API } from "../models/api";
 import { ConsultationService } from "./consultation.service";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Schedule } from "../models/schedule";
+import { Agenda } from "../models/schedule";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class ScheduleService {
 
   async getScheduleById(id: string): Promise<any> {
     try {
-      const observable = this.http.get<Schedule>(API.schedule + `/${id}`);
+      const observable = this.http.get<Agenda>(API.schedule + `/${id}`);
       return await firstValueFrom(observable)
     } catch (error) {
       console.error('An error occurred while fetching the schedule:', error);
@@ -38,7 +38,7 @@ export class ScheduleService {
 
   async getScheduleStatistics(): Promise<any> {
     try {
-      const observable = this.http.get<any>(API.schedule + '/stats');
+      const observable = this.http.get<any>(API.schedule + '/stats/statistics');
       return await lastValueFrom(observable);
     } catch (error) {
       console.error('An error occurred while fetching the schedule statistics:', error);
@@ -46,9 +46,9 @@ export class ScheduleService {
     }
   }
 
-  async postSchedule(schedule: Schedule): Promise<any> {
+  async postSchedule(schedule: Agenda): Promise<any> {
     try {
-      const observable = this.http.post<Schedule>(API.schedule, schedule);
+      const observable = this.http.post<Agenda>(API.schedule, schedule);
       return await lastValueFrom(observable);
     } catch (error) {
       console.error('An error occurred while posting the schedule:', error);
@@ -67,7 +67,7 @@ export class ScheduleService {
   }
 
 
-  async patchSchedule(id: number, schedule: Schedule): Promise<any> {
+  async patchSchedule(id: number, schedule: Agenda): Promise<any> {
     try {
       const observable = this.http.patch(API.schedule + `/${id}`, schedule);
       return await lastValueFrom(observable);

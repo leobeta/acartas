@@ -1,13 +1,13 @@
 import { Patient } from "./patient";
 
-export interface BasicSchedule {
+export interface BasicAgenda {
   id?: number;
-  date: string;
+  fecha: string;
   patientId: Patient;
   userId: number;
 }
 
-export interface Schedule extends BasicSchedule {
+export interface Agenda extends BasicAgenda {
   notes: string;
   active?: boolean;
   created_timestamp?: Date;
