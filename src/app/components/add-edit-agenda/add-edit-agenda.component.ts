@@ -34,7 +34,7 @@ export class AddEditAgendaComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
     this.form = this.fb.group({
-      date: [null, [Validators.required]],
+      fecha: [null, [Validators.required]],
       time: [null, [Validators.required]],
       notes: [''],
       patient: [null, [Validators.required]],
@@ -76,7 +76,7 @@ export class AddEditAgendaComponent implements OnInit {
   getAgenda(id: number) {
     this.agendaService.getAgendaById(id.toString()).then(data => {
       this.form.setValue({
-        date: data[0].fecha ? new Date(data[0].fecha) : undefined,
+        fecha: data[0].fecha ? new Date(data[0].fecha) : undefined,
         time: data[0].fecha ? new Date(data[0].fecha) : undefined,
         notes: data[0].notes,
         patient: data[0].pId,
@@ -143,9 +143,9 @@ export class AddEditAgendaComponent implements OnInit {
     });
   }
 
-  getFullDate(date: Date, time: Date): string {
-    const dateString = `${date.toLocaleDateString('en-US')} ${time.toLocaleTimeString('en-GB')}`;
-    const [month, day, year, hour, minutes, seconds] = dateString.split(/\D/).map(Number);
+  getFullDate(fecha: Date, time: Date): string {
+    const fechaString = `${fecha.toLocaleDateString('en-US')} ${time.toLocaleTimeString('en-GB')}`;
+    const [month, day, year, hour, minutes, seconds] = fechaString.split(/\D/).map(Number);
 
     return moment(new Date(year, month - 1, day, hour, minutes, seconds)).format("YYYY-MM-DD HH:mm:ss");
   }
