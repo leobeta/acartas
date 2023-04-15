@@ -1,9 +1,7 @@
-import { Patient } from "./patient";
-
 export interface BasicAgenda {
   id?: number;
   fecha: string;
-  patientId: Patient;
+  patientId: number;
   userId: number;
 }
 

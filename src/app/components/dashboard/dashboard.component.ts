@@ -1,7 +1,7 @@
+import Chart, { ChartData } from 'chart.js/auto';
 import { Component, OnInit } from "@angular/core";
 
-import Chart, { ChartData } from 'chart.js/auto';
-import { ScheduleService } from "src/app/services/schedule.service";
+import { AgendaService } from "src/app/services/agenda.service";
 
 type DataItem = {
   year: number,
@@ -19,14 +19,14 @@ type DataItem = {
 export class DashboardComponent implements OnInit {
   private chartInstance: Chart | null = null;
 
-  constructor(private scheduleService: ScheduleService) { }
+  constructor(private agendaService: AgendaService) { }
 
   ngOnInit(): void {
     this.getData();
   }
 
   async getData() {
-    this.scheduleService.getScheduleStatistics().then(async (res) => {
+    this.agendaService.getAgendaStatistics().then(async (res) => {
       const dataSet = res;
       const chartData = await this.processDataSet(dataSet);
 

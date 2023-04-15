@@ -8,6 +8,6 @@ export const API = {
     getUser: APIURI + '/user/getUserById'
   },
   patient: APIURI + '/patient',
-  schedule: APIURI + '/schedule',
+  agenda: APIURI + '/agenda',
   consultation: APIURI + '/consultation',
 }

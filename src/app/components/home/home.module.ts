@@ -1,7 +1,7 @@
+import { AddEditAgendaComponent } from "../add-edit-agenda/add-edit-agenda.component";
 import { AddEditCasesComponent } from "../add-edit-cases/add-edit-cases.component";
 import { AddEditObservation } from "../add-edit-observation/add-edit-observation";
 import { AddEditPatientComponent } from "../add-edit-patient/add-edit-patient.component";
-import { AddEditScheduleComponent } from "../add-edit-schedule/add-edit-schedule.component";
 import { AgendaComponent } from "../agenda/agenda.component";
 import { CasesComponent } from "../cases/cases.component";
 import { CommonModule } from "@angular/common";
@@ -24,7 +24,7 @@ import { UsersComponent } from "../users/users.component";
     AgendaComponent,
     CasesComponent,
     AddEditPatientComponent,
-    AddEditScheduleComponent,
+    AddEditAgendaComponent,
     AddEditCasesComponent,
     AddEditObservation,
     ConfirmationDialogComponent,

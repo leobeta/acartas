@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { AddEditScheduleComponent } from '../add-edit-schedule/add-edit-schedule.component';
+import { AddEditAgendaComponent } from '../add-edit-agenda/add-edit-agenda.component';
+import { Agenda } from '../../models/agenda';
+import { AgendaService } from '../../services/agenda.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Agenda } from '../../models/schedule';
-import { ScheduleService } from '../../services/schedule.service';
 
 @Component({
   selector: 'app-agenda',
@@ -18,9 +18,9 @@ export class AgendaComponent implements OnInit {
   dataSourceActive!: MatTableDataSource<Agenda>;
   dataSourcePast!: MatTableDataSource<Agenda>;
   dataSourceCancelled!: MatTableDataSource<Agenda>;
-  activeSchedules: Agenda[] = [];
-  pastSchedules: Agenda[] = [];
-  cancelledSchedules: Agenda[] = [];
+  activeAgendas: Agenda[] = [];
+  pastAgendas: Agenda[] = [];
+  cancelledAgendas: Agenda[] = [];
 
 
   @ViewChild('activePaginator') activePaginator!: MatPaginator;
@@ -28,7 +28,7 @@ export class AgendaComponent implements OnInit {
   @ViewChild('cancelledPaginator') cancelledPaginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private dialog: MatDialog, private scheduleService: ScheduleService) {
+  constructor(private dialog: MatDialog, private agendaService: AgendaService) {
   }
 
   ngOnInit(): void {
@@ -36,32 +36,32 @@ export class AgendaComponent implements OnInit {
   }
 
   getData() {
-    this.scheduleService.getAllSchedule().then((res: any) => {
-      this.activeSchedules = [];
-      this.pastSchedules = [];
-      this.cancelledSchedules = [];
+    this.agendaService.getAllAgenda().then((res: any) => {
+      this.activeAgendas = [];
+      this.pastAgendas = [];
+      this.cancelledAgendas = [];
       const now = new Date();
-      res.forEach((schedule: any) => {
-        if (schedule.sActive) {
-          if (new Date(schedule.fecha) >= now) {
-            this.activeSchedules.push(schedule);
+      res.forEach((agenda: any) => {
+        if (agenda.sActive) {
+          if (new Date(agenda.fecha) >= now) {
+            this.activeAgendas.push(agenda);
           } else {
-            this.pastSchedules.push(schedule);
+            this.pastAgendas.push(agenda);
           }
         } else {
-          this.cancelledSchedules.push(schedule);
+          this.cancelledAgendas.push(agenda);
         }
       });
 
-      this.dataSourceActive = new MatTableDataSource(this.activeSchedules);
+      this.dataSourceActive = new MatTableDataSource(this.activeAgendas);
       this.dataSourceActive.paginator = this.activePaginator;
       this.dataSourceActive.sort = this.sort;
 
-      this.dataSourcePast = new MatTableDataSource(this.pastSchedules);
+      this.dataSourcePast = new MatTableDataSource(this.pastAgendas);
       this.dataSourcePast.paginator = this.pastPaginator;
       this.dataSourceActive.sort = this.sort
 
-      this.dataSourceCancelled = new MatTableDataSource(this.cancelledSchedules);
+      this.dataSourceCancelled = new MatTableDataSource(this.cancelledAgendas);
       this.dataSourceCancelled.paginator = this.cancelledPaginator;
       this.dataSourceCancelled.sort = this.sort;
     });
@@ -87,7 +87,7 @@ export class AgendaComponent implements OnInit {
   }
 
   addEditAppointment(id?: number) {
-    const dialogRef = this.dialog.open(AddEditScheduleComponent, {
+    const dialogRef = this.dialog.open(AddEditAgendaComponent, {
       width: '30%',
       disableClose: true,
       data: { id: id },
@@ -101,7 +101,7 @@ export class AgendaComponent implements OnInit {
   }
 
   deleteAppointment(id: number) {
-    this.scheduleService.deleteSchedule(id).then(() => {
+    this.agendaService.deleteAgenda(id).then(() => {
       this.getData();
     })
       .catch((err) => {

@@ -2,21 +2,21 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Patient } from '../../models/patient';
-import { Agenda } from '../../models/schedule';
+import { Agenda } from '../../models/agenda';
 import { PatientService } from '../../services/patient.service';
 import * as moment from 'moment'
 
-import { ScheduleService } from '../../services/schedule.service';
+import { AgendaService } from '../../services/agenda.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddEditPatientComponent } from "../add-edit-patient/add-edit-patient.component";
 import { ConsultationService } from '../../services/consultation.service';
 
 @Component({
-  selector: 'app-add-edit-schedule',
-  templateUrl: './add-edit-schedule.component.html',
-  styleUrls: ['./add-edit-schedule.component.scss']
+  selector: 'app-add-edit-agenda',
+  templateUrl: './add-edit-agenda.component.html',
+  styleUrls: ['./add-edit-agenda.component.scss']
 })
-export class AddEditScheduleComponent implements OnInit {
+export class AddEditAgendaComponent implements OnInit {
   form: FormGroup;
   id: number;
   operation: string = 'Agregar ';
@@ -24,13 +24,13 @@ export class AddEditScheduleComponent implements OnInit {
   minValue: Date;
   maxValue: Date;
 
-  constructor(private scheduleService: ScheduleService,
+  constructor(private agendaService: AgendaService,
     private patientService: PatientService,
     private consultationService: ConsultationService,
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    public dialogRef: MatDialogRef<AddEditScheduleComponent>,
+    public dialogRef: MatDialogRef<AddEditAgendaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
 
     this.form = this.fb.group({
@@ -67,14 +67,14 @@ export class AddEditScheduleComponent implements OnInit {
   isEdit(id: number | undefined): boolean {
     if (id !== undefined) {
       this.operation = 'Editar ';
-      this.getSchedule(id);
+      this.getAgenda(id);
       return true;
     }
     return false;
   }
 
-  getSchedule(id: number) {
-    this.scheduleService.getScheduleById(id.toString()).then(data => {
+  getAgenda(id: number) {
+    this.agendaService.getAgendaById(id.toString()).then(data => {
       this.form.setValue({
         date: data[0].fecha ? new Date(data[0].fecha) : undefined,
         time: data[0].fecha ? new Date(data[0].fecha) : undefined,
@@ -98,12 +98,12 @@ export class AddEditScheduleComponent implements OnInit {
     }
   }
 
-  addEditSchedule() {
+  addEditAgenda() {
     if (this.form.invalid) {
       return;
     }
 
-    const schedule: Agenda = {
+    const agenda: Agenda = {
       fecha: this.getFullDate(this.form.value.date, this.form.value.time),
       notes: this.form.value.notes || null,
       patientId: this.form.value.patient,
@@ -112,7 +112,7 @@ export class AddEditScheduleComponent implements OnInit {
     }
 
     if (!this.isEdit(this.id)) {
-      this.scheduleService.postSchedule(schedule).then((res) => {
+      this.agendaService.postAgenda(agenda).then((res) => {
         if (!res.message) {
           this.openSnackBar();
           this.closeDialog();
@@ -122,8 +122,8 @@ export class AddEditScheduleComponent implements OnInit {
         }
       });
     } else {
-      schedule.id = this.id;
-      this.scheduleService.patchSchedule(this.id!, schedule).then((res) => {
+      agenda.id = this.id;
+      this.agendaService.patchAgenda(this.id!, agenda).then((res) => {
         if (!res.message) {
           this.openSnackBar();
           this.closeDialog();
