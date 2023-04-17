@@ -12,7 +12,7 @@ import { Injectable } from "@angular/core";
 
 export class AgendaService {
 
-  constructor(private http: HttpClient, private consultationService: ConsultationService) {
+  constructor(private http: HttpClient) {
   }
 
   async getAllAgenda(): Promise<any> {
@@ -32,16 +32,6 @@ export class AgendaService {
       return await firstValueFrom(observable)
     } catch (error) {
       console.error('An error occurred while fetching the agenda:', error);
-      throw error;
-    }
-  }
-
-  async getAgendaStatistics(): Promise<any> {
-    try {
-      const observable = this.http.get<any>(API.agenda + '/stats/statistics');
-      return await lastValueFrom(observable);
-    } catch (error) {
-      console.error('An error occurred while fetching the agenda statistics:', error);
       throw error;
     }
   }

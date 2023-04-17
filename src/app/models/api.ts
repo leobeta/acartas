@@ -10,4 +10,5 @@ export const API = {
   patient: APIURI + '/patient',
   agenda: APIURI + '/agenda',
   consultation: APIURI + '/consultation',
+  dashboard: APIURI + '/dashboard',
 }

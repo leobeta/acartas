@@ -1,7 +1,7 @@
 import Chart, { ChartData } from 'chart.js/auto';
 import { Component, OnInit } from "@angular/core";
 
-import { AgendaService } from "src/app/services/agenda.service";
+import { DashboardService } from 'src/app/services/dashboard.service';
 
 type DataItem = {
   year: number,
@@ -19,22 +19,24 @@ type DataItem = {
 export class DashboardComponent implements OnInit {
   private chartInstance: Chart | null = null;
 
-  constructor(private agendaService: AgendaService) { }
+  constructor(private dashboardService: DashboardService) { }
 
   ngOnInit(): void {
     this.getData();
   }
 
   async getData() {
-    this.agendaService.getAgendaStatistics().then(async (res) => {
+    this.getAgendaStats();
+    this.getAgendaPatientsWithoutAppointment();
+    this.getAgendaByQuarter();
+  }
+
+  private getAgendaStats() {
+    this.dashboardService.getAgendaStats().then(async (res) => {
       const dataSet = res;
       const chartData = await this.processDataSet(dataSet);
 
-      if (this.chartInstance) {
-        this.chartInstance.destroy();
-      }
-
-      this.chartInstance = new Chart('myChart', {
+      const myChart = new Chart('myChart', {
         type: 'bar',
         data: chartData,
         options: {
@@ -43,6 +45,7 @@ export class DashboardComponent implements OnInit {
               beginAtZero: true,
             },
           },
+          responsive: false,
         },
       });
     })
@@ -80,6 +83,59 @@ export class DashboardComponent implements OnInit {
     };
   }
 
+  private getAgendaPatientsWithoutAppointment() {
+  }
+
+  private getAgendaByQuarter() {
+    this.dashboardService.getAgendaByQuarter().then(async (res) => {
+      const dataSet = res;
+      const pieData = await this.processPieDataSet(dataSet);
+
+      const myChart3 = new Chart('myChart3', {
+        type: 'pie',
+        data: pieData,
+        options: {
+          responsive: false,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+            title: {
+              display: true,
+              text: 'Citas por trimestre'
+            }
+          }
+        },
+      });
+    })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  private processPieDataSet(data: DataItem[]) {
+    const filteredData = this.filterPieAndMapData(data);
+    const rowCounts = filteredData.map(item => item.patients);
+    const labels = filteredData.map(item => item.label);
+    return {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Citas por trimestre',
+          data: rowCounts,
+          backgroundColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+          ],
+          hoverOffset: 4
+        }
+      ]
+    };
+
+  }
+
   private filterAndMapData(data: DataItem[], active: number) {
     return data
       .filter(x => x.active === active)
@@ -88,6 +144,13 @@ export class DashboardComponent implements OnInit {
         month: this.getMonthNames(x.month),
         row_count: x.row_count
       }));
+  }
+
+  filterPieAndMapData(data: any[]) {
+    return data.map(x => ({
+      label: x.year + ' - ' + x.quarter,
+      patients: x.num_patients,
+    }));
   }
 
   getMonthNames(monthNumber?: number) {
