@@ -36,7 +36,7 @@ export class DashboardComponent implements OnInit {
       const dataSet = res;
       const chartData = await this.processDataSet(dataSet);
 
-      const myChart = new Chart('myChart', {
+      const barChart = new Chart('barChart', {
         type: 'bar',
         data: chartData,
         options: {
@@ -45,7 +45,7 @@ export class DashboardComponent implements OnInit {
               beginAtZero: true,
             },
           },
-          responsive: false,
+          responsive: true,
         },
       });
     })
@@ -91,11 +91,11 @@ export class DashboardComponent implements OnInit {
       const dataSet = res;
       const pieData = await this.processPieDataSet(dataSet);
 
-      const myChart3 = new Chart('myChart3', {
+      const pieChart = new Chart('pieChart', {
         type: 'pie',
         data: pieData,
         options: {
-          responsive: false,
+          responsive: true,
           plugins: {
             legend: {
               position: 'top',
